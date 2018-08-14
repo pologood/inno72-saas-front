@@ -75,9 +75,10 @@ export default class SiderCustom extends Component{
                         key="/app/chart"
                         title={<span><span>消息管理</span></span>}
                     >
-                        <Menu.Item key="/app/chart/echarts">
-                            <Link to={'/app/chart/echarts'}><span>消息模板</span></Link>
+                        <Menu.Item key="/app/message/messageTemplate">
+                            <Link to={'/app/message/messageTemplate'}><span>消息模板</span></Link>
                         </Menu.Item>
+
                         <Menu.Item key="/app/chart/echarts">
                             <Link to={'/app/chart/echarts'}><span>历史消息</span></Link>
                         </Menu.Item>

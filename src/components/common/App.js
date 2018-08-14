@@ -12,6 +12,7 @@ import UForm from '../form/Form';
 import noMatch from './404';
 import RichText from "../richText/RichText";
 import UploadEditor from "../upload/UploadEditor";
+import MessageTemplate from "../message/messageTemplate/MessageTemplate";
 
 const {Content, Footer} = Layout;
 
@@ -57,11 +58,12 @@ export default class App extends Component {
                             <Route exact path={'/app/chart/echarts'} component={Echarts} />
                             <Route exact path={'/app/richText'} component={RichText} />
                             <Route exact path={'/app/upload'} component={UploadEditor} />
+
+                            <Route exact path={'/app/message/messageTemplate'} component={MessageTemplate} />
                             <Route component={noMatch} />
                         </Switch>
                     </Content>
                     <Footer style={{textAlign: 'center'}}>
-                        MSPA ©2017-2018 Created by zysoft
                     </Footer>
                 </Layout>
             </Layout>
