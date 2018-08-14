@@ -78,8 +78,10 @@ export default class SiderCustom extends Component{
                         <Menu.Item key="/app/chart/echarts">
                             <Link to={'/app/chart/echarts'}><span>消息模板</span></Link>
                         </Menu.Item>
+                        <Menu.Item key="/app/chart/echarts">
+                            <Link to={'/app/chart/echarts'}><span>历史消息</span></Link>
+                        </Menu.Item>
                     </SubMenu>
-
 
                     <Menu.Item key="/app/richText">
                         <Link to={'/app/richText'}><Icon type="edit" /><span>富文本</span></Link>

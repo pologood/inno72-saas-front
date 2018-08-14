@@ -91,6 +91,20 @@ class CustomizedForm extends Component{
                             <Input />
                         )}
                     </FormItem>
+                    <FormItem label="类型" {...FormItemLayout} hasFeedback>
+                        {getFieldDecorator('messageType', {
+                            rules: [{ required: true, message: '请输入类型！' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
+                    <FormItem label="子类型" {...FormItemLayout} hasFeedback>
+                        {getFieldDecorator('messageChildType', {
+                            rules: [{ required: true, message: '请输入子类型！' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
                 </Form>
             </Modal>
         );

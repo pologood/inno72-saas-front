@@ -22,6 +22,7 @@ Mock.mock('/address', address);
 Mock.mock('/data', data);
 
 var MSGTEMPLATE_URL = "http://api.msg.inner.72solo.com/msgTemplate";
+// var MSGTEMPLATE_URL = "http://172.16.23.207:7070/msgTemplate";
 
 //数组中是否包含某项
 function isContains(arr, item) {
@@ -67,27 +68,46 @@ export default class UForm extends Component {
             tableRowKey: 0,
             isUpdate: false,
             loading: true,
+            pageNo: 0,
+            pageSize:10
         };
     }
 
     //getData
     getData = () => {
-        axios.get(MSGTEMPLATE_URL)
-            .then(function (response) {
-                // console.log(response.data);
-                this.setState({
-                    dataSource: response.data.data.content,
-                    loading: false
-                })
-            }.bind(this))
-            .catch(function (error) {
-                console.log(error);
+        axios.get(MSGTEMPLATE_URL, {
+            params: {
+                page: this.state.pageNo,
+                size: this.state.pageSize
+            }
+        })
+        .then(function (response) {
+            // console.log(response.data);
+            this.setState({
+                dataSource: response.data.data,
+                loading: false
             })
+        }.bind(this))
+        .catch(function (error) {
+            console.log(error);
+        })
     };
 
-    notify = (type) => {
-        notification[type]({
+    /**
+     * 成功通知
+     */
+    notifySuccess = () => {
+        notification['success']({
             message: '操作成功'
+        });
+    };
+
+    /**
+     * 失败通知
+     */
+    notifyError = () => {
+        notification['error']({
+            message: '操作失败'
         });
     };
 
@@ -209,25 +229,27 @@ export default class UForm extends Component {
                 return;
             }
             console.log('Received values of form: ', values);
-
             axios.post(MSGTEMPLATE_URL, values)
-            .then( (response) => {
-                this.notify('success');
-                this.handleCancel();
-                // this.getData();
-                // this.render();
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                .then((response) => {
+                    if (response.data.code == 0) {
+                        this.notifySuccess();
+                        this.handleCancel();
+                        this.getData();
+                    } else {
+                        this.notifyError();
+                    }
+                })
+                .catch(function (error) {
+                    this.notifyError();
+                });
         });
-
     };
+
     //取消
     handleCancel = () => {
         this.setState({visible: false});
     };
+
     //批量删除
     MinusClick = () => {
         const {dataSource, selectedRowKeys} = this.state;
@@ -236,59 +258,91 @@ export default class UForm extends Component {
         });
     };
     //单个删除
-    onDelete = (key) => {
-        // todo 调用删除操作
-        const dataSource = [...this.state.dataSource];
-        this.setState({dataSource: dataSource.filter(item => item.key !== key)});
+    onDelete = (record) => {
+        console.log(record.id);
+        axios.delete(MSGTEMPLATE_URL + "/" + record.id)
+            .then((response) => {
+                if (response.data.code == 0) {
+                    this.notifySuccess();
+                    this.getData();
+                } else {
+                    this.notifyError();
+                }
+            })
+            .catch(function (error) {
+                this.notifyError();
+            });
     };
     //点击修改
-    editClick = (key) => {
-        // todo 请求最新的接口数据
-        debugger
-        const form = this.form;
-        const {dataSource} = this.state;
-        const index = catchIndex(dataSource, key);
-        form.setFieldsValue({
-            key: key,
-            name: dataSource[index].name,
-            sex: dataSource[index].sex,
-            age: dataSource[index].age,
-            address: dataSource[index].address.split(' / '),
-            phone: dataSource[index].phone,
-            email: dataSource[index].email,
-            website: dataSource[index].website,
-        });
-        this.setState({
-            visible: true,
-            tableRowKey: key,
-            isUpdate: true,
-        });
+    editClick = (record) => {
+        console.log(record.id);
+        axios.get(MSGTEMPLATE_URL + "/" + record.id)
+            .then((response) => {
+                if (response.data.code == 0) {
+                    console.log(response);
+
+                    const dataobj = response.data.data;
+                    const form = this.form;
+
+                    form.setFieldsValue({
+                        name: dataobj.name,
+                        code: dataobj.code,
+                        messageType: dataobj.messageType,
+                        messageChildType: dataobj.messageChildType
+                    });
+
+                    this.setState({
+                        visible: true,
+                        isUpdate: true,
+                    });
+
+                } else {
+                    this.notifyError();
+                }
+            })
+            .catch(function (error) {
+                this.notifyError();
+            });
+
     };
     //更新修改
     handleUpdate = () => {
-        debugger
         const form = this.form;
-        const {dataSource, tableRowKey} = this.state;
         form.validateFields((err, values) => {
             if (err) {
                 return;
             }
             console.log('Received values of form: ', values);
 
-            values.key = tableRowKey;
-            values.address = values.address.join(" / ");
-            values.createtime = moment().format("YYYY-MM-DD hh:mm:ss");
-
-            form.resetFields();
-            this.setState({
-                visible: false,
-                dataSource: replace(dataSource, tableRowKey, values)
-            });
+            axios.post(MSGTEMPLATE_URL, values)
+                .then((response) => {
+                    if (response.data.code == 0) {
+                        this.notifySuccess();
+                        this.handleCancel();
+                        this.getData();
+                    } else {
+                        this.notifyError();
+                    }
+                })
+                .catch(function (error) {
+                    this.notifyError();
+                });
         });
     };
     //单选框改变选择
     checkChange = (selectedRowKeys) => {
         this.setState({selectedRowKeys: selectedRowKeys});
+    };
+
+    //分页
+    pageChange = (current, pageSize) => {
+        console.log(current);
+        this.setState({
+            pageNo: current-1,
+            pageSize: pageSize,
+        }, () => {
+            this.getData();
+        });
     };
 
     render() {
@@ -320,8 +374,6 @@ export default class UForm extends Component {
                         <div className='btnOpera'>
                             <Button type="primary" onClick={this.btnSearch_Click}
                                     style={{marginRight: '10px'}}>查询</Button>
-                            <Button type="primary" onClick={this.btnClear_Click}
-                                    style={{background: '#f8f8f8', color: '#108ee9'}}>重置</Button>
                         </div>
                     </Row>
                     <FormTable
@@ -330,6 +382,7 @@ export default class UForm extends Component {
                         onDelete={this.onDelete}
                         editClick={this.editClick}
                         loading={loading}
+                        pageChange={this.pageChange}
                     />
                     {isUpdate ?
                         <CollectionCreateForm ref={this.saveFormRef} visible={visible} onCancel={this.handleCancel}
