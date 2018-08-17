@@ -2,22 +2,24 @@ import React, {Component} from 'react';
 import './messageTemplate.less';
 
 import axios from 'axios';
-import {Row, Col, Input, Icon, Cascader, DatePicker, Button, Tooltip, Popconfirm, notification} from 'antd';
+import {Row, Col, Input, Icon, Button, notification, Form, Select} from 'antd';
 
 import BreadcrumbCustom from '../../common/BreadcrumbCustom';
 import MessageTemplateCreateForm from './MessageTemplateForm';
 import MessageTemplateTable from './MessageTemplateTable';
 
-var MSGTEMPLATE_URL = "http://api.msg.inner.72solo.com/msgTemplate";
-// var MSGTEMPLATE_URL = "http://172.16.23.207:7070/msgTemplate";
+import moment from 'moment';
 
-export default class MessageTemplate extends Component {
+// var MSGTEMPLATE_URL = "http://api.msg.inner.72solo.com/msgTemplate";
+var MSGTEMPLATE_URL = "http://localhost:8081/msgTemplate";
+
+const FormItem = Form.Item;
+const Option = Select.Option;
+
+class MessageTemplateInner extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userName: '',
-            address: '',
-            timeRange: '',
             visible: false, //新建窗口隐藏
             dataSource: [],
             selectedRowKeys: [],
@@ -25,7 +27,9 @@ export default class MessageTemplate extends Component {
             isUpdate: false,
             loading: true,
             pageNo: 0,
-            pageSize: 10
+            pageSize: 10,
+            key:'',
+            messageType : ''
         };
     }
 
@@ -33,19 +37,21 @@ export default class MessageTemplate extends Component {
         axios.get(MSGTEMPLATE_URL, {
             params: {
                 page: this.state.pageNo,
-                size: this.state.pageSize
+                size: this.state.pageSize,
+                key : this.state.key,
+                messageType : this.state.messageType
             }
         })
-            .then(function (response) {
-                // console.log(response.data);
-                this.setState({
-                    dataSource: response.data.data,
-                    loading: false
-                })
-            }.bind(this))
-            .catch(function (error) {
-                console.log(error);
+        .then(function (response) {
+            // console.log(response.data);
+            this.setState({
+                dataSource: response.data.data,
+                loading: false
             })
+        }.bind(this))
+        .catch(function (error) {
+            console.log(error);
+        })
     };
 
     /**
@@ -72,8 +78,24 @@ export default class MessageTemplate extends Component {
     }
 
     //搜索按钮
-    btnSearch_Click = () => {
+    handleSearch = e => {
+        e.preventDefault();
+        const { form } = this.props;
+        form.validateFields((err, fieldsValue) => {
+            if (err) return;
+            this.setState({
+                page: 0,
+                key: fieldsValue.key ? fieldsValue.key : '',
+                messageType: fieldsValue.messageType ? fieldsValue.messageType : ''
+            }, () => {
+                this.getData();
+            });
+        });
+    };
 
+    // 选择消息类型
+    handleChange = value => {
+        console.log(value);
     };
 
     //新建信息弹窗
@@ -100,6 +122,10 @@ export default class MessageTemplate extends Component {
                 return;
             }
             console.log('Received values of form: ', values);
+
+            values.sendTime.include.start = values.sendTime.include.start._i;
+            values.sendTime.include.end = values.sendTime.include.end._i;
+
             axios.post(MSGTEMPLATE_URL, values)
                 .then((response) => {
                     if (response.data.code == 0) {
@@ -148,12 +174,15 @@ export default class MessageTemplate extends Component {
 
                     const dataobj = response.data.data;
                     const form = this.form;
-
+                    console.log(dataobj);
                     form.setFieldsValue({
                         name: dataobj.name,
                         code: dataobj.code,
-                        messageType: dataobj.messageType,
-                        messageChildType: dataobj.messageChildType
+                        messageType: dataobj.messageType + '',
+                        messageChildType: dataobj.messageChildType + '',
+                        start: moment(dataobj.sendTime.include.start, 'HH:mm:ss'),
+                        end: moment(dataobj.sendTime.include.end, 'HH:mm:ss'),
+                        'content.content': dataobj.content.content
                     });
 
                     this.setState({
@@ -166,6 +195,7 @@ export default class MessageTemplate extends Component {
                 }
             })
             .catch(function (error) {
+                console.log(error);
                 this.notifyError();
             });
 
@@ -178,21 +208,22 @@ export default class MessageTemplate extends Component {
             if (err) {
                 return;
             }
-            console.log('Received values of form: ', values);
+            console.log('Received values of form: ', values.start._i);
+            console.log('Received values of form: ', values.end._i);
 
-            axios.post(MSGTEMPLATE_URL, values)
-                .then((response) => {
-                    if (response.data.code == 0) {
-                        this.notifySuccess();
-                        this.handleCancel();
-                        this.getData();
-                    } else {
-                        this.notifyError();
-                    }
-                })
-                .catch(function (error) {
-                    this.notifyError();
-                });
+            // axios.post(MSGTEMPLATE_URL, values)
+            //     .then((response) => {
+            //         if (response.data.code == 0) {
+            //             this.notifySuccess();
+            //             this.handleCancel();
+            //             this.getData();
+            //         } else {
+            //             this.notifyError();
+            //         }
+            //     })
+            //     .catch(function (error) {
+            //         this.notifyError();
+            //     });
         });
     };
 
@@ -212,36 +243,48 @@ export default class MessageTemplate extends Component {
     };
 
     render() {
-        const {userName, timeRange, dataSource, visible, isUpdate, loading} = this.state;
-        const questiontxt = () => {
-            return (
-                <p>
-                    <Icon type="plus-circle-o"/> : 新建信息<br/>
-                    <Icon type="minus-circle-o"/> : 批量删除
-                </p>
-            )
-        };
+        const {dataSource, visible, isUpdate, loading} = this.state;
+        const { form } = this.props;
+        const { getFieldDecorator } = form;
         return (
             <div>
                 <BreadcrumbCustom paths={['首页', '表单']}/>
                 <div className='formBody'>
-                    <Row gutter={16}>
-                        <Col className="gutter-row" sm={8}>
-                            <Input
-                                value={userName}
-                            />
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <div className='plus' onClick={this.CreateItem}>
-                            <Icon type="plus-circle"/>
-                        </div>
+                    <Form onSubmit={this.handleSearch}>
+                        <Row gutter={16}>
+                            <Col className="gutter-row" sm={4} md={2}>
+                                {getFieldDecorator('messageType')(
+                                <Select placeholder="请选择" style={{ width: 95 ,paddingTop:3.5}} onChange={this.handleChange}>
+                                    <Option value="">全部</Option>
+                                    <Option value="1">微信</Option>
+                                    <Option value="2">钉钉群</Option>
+                                    <Option value="3">短信</Option>
+                                    <Option value="4">推送</Option>
+                                    <Option value="5">邮件</Option>
+                                    <Option value="6">钉钉机器人</Option>
+                                    <Option value="7">钉钉微应用</Option>
+                                    <Option value="8">企业微信</Option>
+                                </Select>
+                                )}
+                            </Col>
+                            <Col className="gutter-row" sm={5}>
+                                <FormItem>
+                                    {getFieldDecorator('key')(<Input placeholder="名称/Code" />)}
+                                </FormItem>
+                            </Col>
+                        </Row>
 
-                        <div className='btnOpera'>
-                            <Button type="primary" onClick={this.btnSearch_Click}
-                                    style={{marginRight: '10px'}}>查询</Button>
-                        </div>
-                    </Row>
+                        <Row gutter={16}>
+                            <div className='plus' onClick={this.CreateItem}>
+                                <Icon type="plus-circle"/>
+                            </div>
+
+                            <div className='btnOpera'>
+                                <Button type="primary" htmlType="submit"
+                                        style={{marginRight: '10px'}}>查询</Button>
+                            </div>
+                        </Row>
+                    </Form>
                     <MessageTemplateTable
                         dataSource={dataSource}
                         checkChange={this.checkChange}
@@ -262,3 +305,5 @@ export default class MessageTemplate extends Component {
         )
     }
 }
+const MessageTemplate = Form.create()(MessageTemplateInner);
+export default MessageTemplate;

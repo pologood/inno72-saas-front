@@ -1,51 +1,161 @@
-import React, { Component } from 'react';
-import { Modal, Form, Input, Radio, InputNumber, Cascader, Select, AutoComplete, Button, Icon } from 'antd';
-import axios from 'axios';
+import React, {Component} from 'react';
+import {Button, Modal, Form, Input, Radio, TimePicker, Select} from 'antd';
+import moment from 'moment';
+import './messageTemplate.less';
 
 const FormItem = Form.Item;
-const options = [];
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
+const Option = Select.Option;
+const {TextArea} = Input;
 
-class MessageTemplateForm extends Component{
+const MSG_TYPE_WECHAT = '1';
+const MSG_TYPE_DDGROUP = '2';
+const MSG_TYPE_MSG = '3';
+const MSG_TYPE_PUSH = '4';
+const MSG_TYPE_EMAIL = '5';
+const MSG_TYPE_ROBOT = '6';
+
+const MSG_CHILD_TYPE_TEXT = '1';
+const MSG_CHILD_TYPE_TEMPLATE = '2';
+
+
+class MessageTemplateForm extends Component {
     state = {
-        autoCompleteResult: [],
+        arrInput: [1],
+        messageType: '',
+        messageChildType: '',
+        messageChildTypeArr: [
+            {'name': '文本', 'val': '1'},
+            {'name': '微信模板', 'val': '2'}
+        ],
+        isShowContent:'none',
+        isShowMessageChildType:'',
+        isShowWechatTemplate:'none',
+        isShowRobotToken:'none',
+        isShowPushBody:'none',
+        isShowGroupId:'none'
     };
-    constructor(props){
+
+    constructor(props) {
         super(props);
     }
-    componentDidMount(){
-        axios.get('/address')
-            .then(function (response) {
-                response.data.map(function(province){
-                    options.push({
-                        value: province.name,
-                        label: province.name,
-                        children: province.city.map(function(city){
-                            return {
-                                value: city.name,
-                                label: city.name,
-                                children: city.area.map(function(area){
-                                    return {
-                                        value: area,
-                                        label: area,
-                                    }
-                                })
-                            }
-                        }),
-                    })
-                })
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+
+    componentDidMount() {
     }
 
-    render(){
-        const { visible, onCancel, onCreate, form, okText, title } = this.props;
-        const { getFieldDecorator } = form;
+    handleMessageTypeClick = e => {
+        this.setState({messageType: e.target.value}, () => {
+            this.showHide()
+        });
+    };
+
+    handleMessageChildTypeClick = e => {
+        this.setState({messageChildType: e.target.value},
+            () => {
+                this.showHide();
+            });
+    };
+
+    addInput = () => {
+        let arrInputLen = this.state.arrInput.length;
+        let endVal = this.state.arrInput.slice(arrInputLen - 1, arrInputLen);
+        this.setState({arrInput: [...this.state.arrInput, endVal]})
+    };
+
+    componentWillReceiveProps(nextProps) {
+        const {form} = nextProps;
+
+        this.setState({
+            messageType: form.getFieldValue('messageType'),
+            messageChildType: form.getFieldValue('messageChildType'),
+        }, () => {
+            this.showHide();
+        });
+    }
+
+    showHide = () => {
+        let messageType = this.state.messageType;
+        let messageChildType = this.state.messageChildType;
+
+        if (messageType == MSG_TYPE_WECHAT) {
+            this.setState({
+                messageChildTypeArr: [
+                    {'name': '文本', 'val': '1'},
+                    {'name': '微信模板', 'val': '2'}
+                ]
+            });
+        }
+        if (messageType == MSG_TYPE_DDGROUP || messageType == MSG_TYPE_ROBOT) {
+            this.setState({
+                messageChildTypeArr: [
+                    {'name': '文本', 'val': '1'},
+                    {'name': '链接', 'val': '2'}
+                ]
+            });
+        }
+        if (messageType == MSG_TYPE_MSG) {
+            this.setState({
+                messageChildTypeArr: [
+                    {'name': '云片', 'val': '1'}
+                ]
+            });
+        }
+
+        if (messageType == MSG_TYPE_WECHAT && messageChildType == MSG_CHILD_TYPE_TEMPLATE) {
+            this.setState({isShowContent:'none', isShowWechatTemplate:''});
+        } else {
+            this.setState({isShowContent:'', isShowWechatTemplate:'none'});
+        }
+
+        if (messageType == MSG_TYPE_EMAIL || messageType == MSG_TYPE_PUSH) {
+            this.setState({isShowMessageChildType: 'none'});
+        } else {
+            this.setState({isShowMessageChildType: ''});
+        }
+
+        if (messageType == MSG_TYPE_ROBOT) {
+            this.setState({isShowRobotToken: ''});
+        } else {
+            this.setState({isShowRobotToken: 'none'});
+        }
+
+        if (messageType == MSG_TYPE_PUSH) {
+            this.setState({isShowPushBody: ''});
+        } else {
+            this.setState({isShowPushBody: 'none'});
+        }
+
+        if (messageType == MSG_TYPE_DDGROUP) {
+            this.setState({isShowGroupId: ''});
+        } else {
+            this.setState({isShowGroupId: 'none'});
+        }
+    };
+
+    render() {
+        const {visible, onCancel, onCreate, form, okText, title} = this.props;
+        const {getFieldDecorator} = form;
         const FormItemLayout = {
-            labelCol: { span: 5 },
-            wrapperCol: { span: 16 },
+            labelCol: {span: 5},
+            wrapperCol: {span: 16},
         };
+
+        let dbtn = [];
+        let dinput = [];
+        let lebelshow = 'data.keyword';
+        let inputplace = 'keyword';
+        dbtn = <Button type="primary" onClick={this.addInput}>+增加自定义参数</Button>;
+
+        this.state.arrInput.map((item, index) => (
+            dinput.push(
+                <FormItem key={index} label={lebelshow + (index + 1)} {...FormItemLayout} hasFeedback>
+                    <Input placeholder={inputplace + (index + 1)} className="dynamic-input"/>
+                    <Input className="dynamic-input"/>
+                </FormItem>
+            )
+        ));
+
         return (
             <Modal
                 width={800}
@@ -58,32 +168,141 @@ class MessageTemplateForm extends Component{
                 <Form layout="horizontal">
                     <FormItem label="名称" {...FormItemLayout} hasFeedback>
                         {getFieldDecorator('name', {
-                            rules: [{ required: true, message: '请输入名称！' }],
+                            rules: [{required: true, message: '请输入名称！'}],
                         })(
-                            <Input />
+                            <Input/>
                         )}
                     </FormItem>
                     <FormItem label="Code" {...FormItemLayout} hasFeedback>
                         {getFieldDecorator('code', {
-                            rules: [{ required: true, message: '请输入Code！' }],
+                            rules: [{required: true, message: '请输入Code！'}],
                         })(
-                            <Input />
+                            <Input/>
                         )}
                     </FormItem>
-                    <FormItem label="类型" {...FormItemLayout} hasFeedback>
+
+                    <FormItem label="发送时间" {...FormItemLayout}>
+                        {getFieldDecorator('sendTime.include.start', {
+                            initialValue: moment('00:00:00', 'HH:mm:ss')
+                        })(
+                            <TimePicker/>
+                        )}
+                        <span> 至 </span>
+                        {getFieldDecorator('sendTime.include.end', {
+                            initialValue: moment('23:59:59', 'HH:mm:ss')
+                        })(
+                            <TimePicker/>
+                        )}
+                    </FormItem>
+
+                    <FormItem label="类型" {...FormItemLayout}>
                         {getFieldDecorator('messageType', {
-                            rules: [{ required: true, message: '请输入类型！' }],
+                            initialValue: '1'
                         })(
-                            <Input />
+                            <RadioGroup onChange={this.handleMessageTypeClick}>
+                                <RadioButton key="1" value="1">微信</RadioButton>
+                                <RadioButton key="2" value="2">钉钉群</RadioButton>
+                                <RadioButton key="3" value="3">短信</RadioButton>
+                                <RadioButton key="4" value="4">推送</RadioButton>
+                                <RadioButton key="5" value="5">邮件</RadioButton>
+                                <RadioButton key="6" value="6">机器人</RadioButton>
+                            </RadioGroup>
                         )}
                     </FormItem>
-                    <FormItem label="子类型" {...FormItemLayout} hasFeedback>
+
+                    <FormItem label="子类型" {...FormItemLayout} style={{display: this.state.isShowMessageChildType}}>
                         {getFieldDecorator('messageChildType', {
-                            rules: [{ required: true, message: '请输入子类型！' }],
+                            initialValue: '1'
                         })(
-                            <Input />
+                            <RadioGroup onChange={this.handleMessageChildTypeClick}>
+                                {
+                                    this.state.messageChildTypeArr.map(function (item) {
+                                        return (
+                                            <RadioButton key={item.id} value={item.val}>{item.name}</RadioButton>
+                                        )
+                                    })
+                                }
+                            </RadioGroup>
                         )}
                     </FormItem>
+
+                    <FormItem label="机器人token" {...FormItemLayout} style={{display: this.state.isShowRobotToken}}>
+                        {getFieldDecorator('robotToken', {})(
+                            <Input/>
+                        )}
+                    </FormItem>
+
+                    <div style={{display: this.state.isShowPushBody}}>
+                        <FormItem label="是否立即启动应用" {...FormItemLayout}>
+                            {getFieldDecorator('messageChildType', {
+                                initialValue: '1'
+                            })(
+                                <RadioGroup>
+                                    <RadioButton key='1' value='1'>是</RadioButton>
+                                    <RadioButton key='2' value='2'>否</RadioButton>
+                                </RadioGroup>
+                            )}
+                        </FormItem>
+                        <FormItem label="推送模板" {...FormItemLayout}>
+                            {getFieldDecorator('pushTemplate', {
+                                initialValue: '1'
+                            })(
+                                <Select style={{ width: 250 }}>
+                                    <Option value="1">点击通知打开应用模板</Option>
+                                    <Option value="2">透传消息模板</Option>
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem label="推送系统" {...FormItemLayout}>
+                            {getFieldDecorator('pushSys', {
+                                initialValue: '1'
+                            })(
+                                <Select style={{ width: 120 }}>
+                                    <Option value="1">安卓版</Option>
+                                    <Option value="2">苹果基础版</Option>
+                                    <Option value="3">苹果专业版</Option>
+                                </Select>
+                            )}
+                        </FormItem>
+                    </div>
+
+                    <FormItem label="群ID" {...FormItemLayout} style={{display: this.state.isShowGroupId}}>
+                        {getFieldDecorator('groupId', {
+                        })(
+                            <Input/>
+                        )}
+                    </FormItem>
+
+                    <FormItem label="内容" {...FormItemLayout} style={{display: this.state.isShowContent}}>
+                        {getFieldDecorator('content.content', {})(
+                            <TextArea rows={4}/>
+                        )}
+                    </FormItem>
+
+                    <div style={{display: this.state.isShowWechatTemplate}}>
+                        <FormItem label="模板ID" {...FormItemLayout} hasFeedback>
+                            {getFieldDecorator('template_id', {})(
+                                <Input/>
+                            )}
+                        </FormItem>
+                        <FormItem label="默认模板跳转Url" {...FormItemLayout} hasFeedback>
+                            {getFieldDecorator('template_url', {})(
+                                <Input/>
+                            )}
+                        </FormItem>
+                        <FormItem label="data.first" {...FormItemLayout} hasFeedback>
+                            {getFieldDecorator('dataFirst', {})(
+                                <Input/>
+                            )}
+                        </FormItem>
+                        <FormItem label="data.remark" {...FormItemLayout} hasFeedback>
+                            {getFieldDecorator('dataRemark', {})(
+                                <Input/>
+                            )}
+                        </FormItem>
+                        {dbtn}
+                        {dinput}
+                    </div>
                 </Form>
             </Modal>
         );
