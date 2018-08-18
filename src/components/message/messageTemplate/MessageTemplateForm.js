@@ -42,7 +42,14 @@ class MessageTemplateForm extends Component {
     }
 
     componentDidMount() {
+        if (this.props.onRef) {
+            this.props.onRef(this)
+        }
     }
+
+    getArrInput = () => {
+       return this.state.arrInput;
+    };
 
     handleDinputHandle = e => {
         console.log(this.state.arrInput);
@@ -84,10 +91,17 @@ class MessageTemplateForm extends Component {
 
         let datas = form.getFieldValue('content.data.data');
         let dataArr = [];
+        let dataArrKey = [];
         for (var i in datas) {
-            dataArr.push(datas[i]);
+            dataArrKey.push(i);
         }
 
+        dataArrKey.sort();
+
+        dataArrKey.map(function(key){
+            dataArr.push(datas[key]);
+        });
+        console.log(dataArr);
         this.setState({
             arrInput: dataArr,
             messageType: form.getFieldValue('messageType'),
@@ -157,7 +171,7 @@ class MessageTemplateForm extends Component {
     };
 
     render() {
-        const {visible, onCancel, onCreate, form, okText, title, handleDinputHandle} = this.props;
+        const {visible, onCancel, onCreate, form, okText, title} = this.props;
         const {getFieldDecorator} = form;
         const FormItemLayout = {
             labelCol: {span: 5},
@@ -168,9 +182,6 @@ class MessageTemplateForm extends Component {
         let dinput = [];
         let lebelshow = 'data.keyword';
         let inputplace = 'keyword';
-        let dinputId = 'content.data.data.keyword';
-        let suffixValue = '.value';
-        let suffixColor = '.color';
         let colorSuffix = '的color,默认值#173177';
         let inputName = 'name-';
         let inputColor = 'color-';
@@ -197,6 +208,7 @@ class MessageTemplateForm extends Component {
                 okText={okText}
                 onCancel={onCancel}
                 onOk={onCreate}
+                onText={this.test}
             >
                 <Form layout="horizontal">
                     <FormItem label="名称" {...FormItemLayout} hasFeedback>

@@ -10,8 +10,8 @@ import MessageTemplateTable from './MessageTemplateTable';
 
 import moment from 'moment';
 
-// var MSGTEMPLATE_URL = "http://api.msg.inner.72solo.com/msgTemplate";
-var MSGTEMPLATE_URL = "http://msg.pinwheelmedical.com/msgTemplate";
+var MSGTEMPLATE_URL = "http://api.msg.inner.72solo.com/msgTemplate";
+// var MSGTEMPLATE_URL = "http://msg.pinwheelmedical.com/msgTemplate";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -22,6 +22,9 @@ const MSG_TYPE_MSG = '3';
 const MSG_TYPE_PUSH = '4';
 const MSG_TYPE_EMAIL = '5';
 const MSG_TYPE_ROBOT = '6';
+
+const MSG_CHILD_TYPE_TEXT = '1';
+const MSG_CHILD_TYPE_TEMPLATE = '2';
 
 var inputMap = new Map();
 
@@ -108,31 +111,6 @@ class MessageTemplateInner extends Component {
         console.log(value);
     };
 
-
-    // todo
-    handleDinputHandle = e => {
-
-        console.log(e.target.value);
-
-        // inputMap.set('keyword1', {"value": "keyword1", "color": "#173177"});
-        // inputMap.set('keyword2', {"value": "keyword2", "color": "#173177"});
-        //
-        // console.log(this.mapToJson(inputMap));
-        //
-        // this.setState({
-        //     dinputData: {
-        //         "keyword1": {
-        //             "value": "keyword1",
-        //             "color": "#173177"
-        //         }
-        //     }
-        // })
-    };
-
-    mapToJson = (map) => {
-        return JSON.stringify([...map]);
-    };
-
     //新建信息弹窗
     CreateItem = () => {
         this.setState({
@@ -150,6 +128,7 @@ class MessageTemplateInner extends Component {
 
     //填充表格行
     handleCreate = () => {
+
         const {dataSource} = this.state;
         const form = this.form;
         form.validateFields((err, values) => {
@@ -160,19 +139,19 @@ class MessageTemplateInner extends Component {
 
             this.dealValues(values);
 
-            // axios.post(MSGTEMPLATE_URL, values)
-            //     .then((response) => {
-            //         if (response.data.code == 0) {
-            //             this.notifySuccess();
-            //             this.handleCancel();
-            //             this.getData();
-            //         } else {
-            //             this.notifyError();
-            //         }
-            //     })
-            //     .catch(function (error) {
-            //         this.notifyError();
-            //     });
+            axios.post(MSGTEMPLATE_URL, values)
+                .then((response) => {
+                    if (response.data.code == 0) {
+                        this.notifySuccess();
+                        this.handleCancel();
+                        this.getData();
+                    } else {
+                        this.notifyError();
+                    }
+                })
+                .catch(function (error) {
+                    this.notifyError();
+                });
         });
     };
 
@@ -194,6 +173,18 @@ class MessageTemplateInner extends Component {
             values.content.transmissionType = '';
             values.content.templateType = '';
             values.content.osType = '';
+        }
+
+        if (values.messageType == MSG_TYPE_WECHAT && values.messageChildType == MSG_CHILD_TYPE_TEMPLATE) {
+            let inputArr = this.child.getArrInput();
+            let dData = {};
+            inputArr.map(function(data, index){
+                dData['keyword'+(index+1)] = data;
+            });
+            console.log(dData);
+            values.content.data.data = dData;
+        } else {
+            values.content.data.data = {};
         }
     };
 
@@ -222,7 +213,7 @@ class MessageTemplateInner extends Component {
     //点击修改
     editClick = (record) => {
         console.log(record.id);
-        axios.get(MSGTEMPLATE_URL + "/WC_NEWGOODS_RECOM_UNDER_SCAN_MSG")
+        axios.get(MSGTEMPLATE_URL + "/" + record.id)
             .then((response) => {
                 if (response.data.code == 0) {
                     console.log(response);
@@ -306,6 +297,11 @@ class MessageTemplateInner extends Component {
         });
     };
 
+    onRef = (ref) => {
+        this.child = ref
+    };
+
+
     render() {
         const {dataSource, visible, isUpdate, loading} = this.state;
         const { form } = this.props;
@@ -356,10 +352,10 @@ class MessageTemplateInner extends Component {
                         pageChange={this.pageChange}
                     />
                     {isUpdate ?
-                        <MessageTemplateCreateForm ref={this.saveFormRef} visible={visible} onCancel={this.handleCancel}
-                                                   onCreate={this.handleUpdate} title="修改" okText="更新" handleDinputHandle={this.handleDinputHandle}
+                        <MessageTemplateCreateForm ref={this.saveFormRef} visible={visible} onCancel={this.handleCancel} onRef={this.onRef}
+                                                   onCreate={this.handleUpdate} title="修改" okText="更新"
                         /> :
-                        <MessageTemplateCreateForm ref={this.saveFormRef} visible={visible} onCancel={this.handleCancel}
+                        <MessageTemplateCreateForm ref={this.saveFormRef} visible={visible} onCancel={this.handleCancel} onRef={this.onRef}
                                                    onCreate={this.handleCreate} title="新建" okText="创建"
                         />}
                 </div>
