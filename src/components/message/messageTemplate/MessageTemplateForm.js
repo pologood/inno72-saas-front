@@ -22,19 +22,19 @@ const MSG_CHILD_TYPE_TEMPLATE = '2';
 
 class MessageTemplateForm extends Component {
     state = {
-        arrInput: [1],
+        arrInput: [],
         messageType: '',
         messageChildType: '',
         messageChildTypeArr: [
             {'name': '文本', 'val': '1'},
             {'name': '微信模板', 'val': '2'}
         ],
-        isShowContent:'none',
-        isShowMessageChildType:'',
-        isShowWechatTemplate:'none',
-        isShowRobotToken:'none',
-        isShowPushBody:'none',
-        isShowGroupId:'none'
+        isShowContent: 'none',
+        isShowMessageChildType: '',
+        isShowWechatTemplate: 'none',
+        isShowRobotToken: 'none',
+        isShowPushBody: 'none',
+        isShowGroupId: 'none'
     };
 
     constructor(props) {
@@ -43,6 +43,24 @@ class MessageTemplateForm extends Component {
 
     componentDidMount() {
     }
+
+    handleDinputHandle = e => {
+        console.log(this.state.arrInput);
+
+        let nameArr = e.target.name.split('-');
+
+        let name = nameArr[0];
+        let index = nameArr[1];
+
+        if (name == 'name') {
+            this.state.arrInput[index].value = e.target.value;
+        } else if (nameArr[0] == 'color') {
+            this.state.arrInput[index].color = e.target.value;
+        }
+        this.setState({
+            arrInput : this.state.arrInput
+        });
+    };
 
     handleMessageTypeClick = e => {
         this.setState({messageType: e.target.value}, () => {
@@ -58,15 +76,20 @@ class MessageTemplateForm extends Component {
     };
 
     addInput = () => {
-        let arrInputLen = this.state.arrInput.length;
-        let endVal = this.state.arrInput.slice(arrInputLen - 1, arrInputLen);
-        this.setState({arrInput: [...this.state.arrInput, endVal]})
+        this.setState({arrInput: [...this.state.arrInput, {value:'', color:''}]})
     };
 
     componentWillReceiveProps(nextProps) {
         const {form} = nextProps;
 
+        let datas = form.getFieldValue('content.data.data');
+        let dataArr = [];
+        for (var i in datas) {
+            dataArr.push(datas[i]);
+        }
+
         this.setState({
+            arrInput: dataArr,
             messageType: form.getFieldValue('messageType'),
             messageChildType: form.getFieldValue('messageChildType'),
         }, () => {
@@ -103,9 +126,9 @@ class MessageTemplateForm extends Component {
         }
 
         if (messageType == MSG_TYPE_WECHAT && messageChildType == MSG_CHILD_TYPE_TEMPLATE) {
-            this.setState({isShowContent:'none', isShowWechatTemplate:''});
+            this.setState({isShowContent: 'none', isShowWechatTemplate: ''});
         } else {
-            this.setState({isShowContent:'', isShowWechatTemplate:'none'});
+            this.setState({isShowContent: '', isShowWechatTemplate: 'none'});
         }
 
         if (messageType == MSG_TYPE_EMAIL || messageType == MSG_TYPE_PUSH) {
@@ -134,7 +157,7 @@ class MessageTemplateForm extends Component {
     };
 
     render() {
-        const {visible, onCancel, onCreate, form, okText, title} = this.props;
+        const {visible, onCancel, onCreate, form, okText, title, handleDinputHandle} = this.props;
         const {getFieldDecorator} = form;
         const FormItemLayout = {
             labelCol: {span: 5},
@@ -145,13 +168,23 @@ class MessageTemplateForm extends Component {
         let dinput = [];
         let lebelshow = 'data.keyword';
         let inputplace = 'keyword';
+        let dinputId = 'content.data.data.keyword';
+        let suffixValue = '.value';
+        let suffixColor = '.color';
+        let colorSuffix = '的color,默认值#173177';
+        let inputName = 'name-';
+        let inputColor = 'color-';
+
         dbtn = <Button type="primary" onClick={this.addInput}>+增加自定义参数</Button>;
 
         this.state.arrInput.map((item, index) => (
             dinput.push(
                 <FormItem key={index} label={lebelshow + (index + 1)} {...FormItemLayout} hasFeedback>
-                    <Input placeholder={inputplace + (index + 1)} className="dynamic-input"/>
-                    <Input className="dynamic-input"/>
+                    <Input name={inputName + index} value={item.value} placeholder={inputplace + (index + 1)}
+                           className="dynamic-input" onChange={this.handleDinputHandle}/>
+                    <Input name={inputColor + index} value={item.color}
+                           placeholder={inputplace + (index + 1) + colorSuffix} className="dynamic-input"
+                           onChange={this.handleDinputHandle}/>
                 </FormItem>
             )
         ));
@@ -234,7 +267,7 @@ class MessageTemplateForm extends Component {
 
                     <div style={{display: this.state.isShowPushBody}}>
                         <FormItem label="是否立即启动应用" {...FormItemLayout}>
-                            {getFieldDecorator('messageChildType', {
+                            {getFieldDecorator('content.transmissionType', {
                                 initialValue: '1'
                             })(
                                 <RadioGroup>
@@ -244,20 +277,20 @@ class MessageTemplateForm extends Component {
                             )}
                         </FormItem>
                         <FormItem label="推送模板" {...FormItemLayout}>
-                            {getFieldDecorator('pushTemplate', {
+                            {getFieldDecorator('content.templateType', {
                                 initialValue: '1'
                             })(
-                                <Select style={{ width: 250 }}>
+                                <Select style={{width: 250}}>
                                     <Option value="1">点击通知打开应用模板</Option>
-                                    <Option value="2">透传消息模板</Option>
+                                    <Option value="4">透传消息模板</Option>
                                 </Select>
                             )}
                         </FormItem>
                         <FormItem label="推送系统" {...FormItemLayout}>
-                            {getFieldDecorator('pushSys', {
+                            {getFieldDecorator('content.osType', {
                                 initialValue: '1'
                             })(
-                                <Select style={{ width: 120 }}>
+                                <Select style={{width: 120}}>
                                     <Option value="1">安卓版</Option>
                                     <Option value="2">苹果基础版</Option>
                                     <Option value="3">苹果专业版</Option>
@@ -267,8 +300,7 @@ class MessageTemplateForm extends Component {
                     </div>
 
                     <FormItem label="群ID" {...FormItemLayout} style={{display: this.state.isShowGroupId}}>
-                        {getFieldDecorator('groupId', {
-                        })(
+                        {getFieldDecorator('groupId', {})(
                             <Input/>
                         )}
                     </FormItem>
@@ -280,23 +312,23 @@ class MessageTemplateForm extends Component {
                     </FormItem>
 
                     <div style={{display: this.state.isShowWechatTemplate}}>
-                        <FormItem label="模板ID" {...FormItemLayout} hasFeedback>
-                            {getFieldDecorator('template_id', {})(
+                        <FormItem label="模板ID" {...FormItemLayout} >
+                            {getFieldDecorator('content.template_id', {})(
                                 <Input/>
                             )}
                         </FormItem>
-                        <FormItem label="默认模板跳转Url" {...FormItemLayout} hasFeedback>
-                            {getFieldDecorator('template_url', {})(
+                        <FormItem label="默认模板跳转Url" {...FormItemLayout} >
+                            {getFieldDecorator('content.url', {})(
                                 <Input/>
                             )}
                         </FormItem>
-                        <FormItem label="data.first" {...FormItemLayout} hasFeedback>
-                            {getFieldDecorator('dataFirst', {})(
+                        <FormItem label="data.first" {...FormItemLayout} >
+                            {getFieldDecorator('content.data.first.color', {})(
                                 <Input/>
                             )}
                         </FormItem>
-                        <FormItem label="data.remark" {...FormItemLayout} hasFeedback>
-                            {getFieldDecorator('dataRemark', {})(
+                        <FormItem label="data.remark" {...FormItemLayout} >
+                            {getFieldDecorator('content.data.remark.color', {})(
                                 <Input/>
                             )}
                         </FormItem>

@@ -11,10 +11,19 @@ import MessageTemplateTable from './MessageTemplateTable';
 import moment from 'moment';
 
 // var MSGTEMPLATE_URL = "http://api.msg.inner.72solo.com/msgTemplate";
-var MSGTEMPLATE_URL = "http://localhost:8081/msgTemplate";
+var MSGTEMPLATE_URL = "http://msg.pinwheelmedical.com/msgTemplate";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
+
+const MSG_TYPE_WECHAT = '1';
+const MSG_TYPE_DDGROUP = '2';
+const MSG_TYPE_MSG = '3';
+const MSG_TYPE_PUSH = '4';
+const MSG_TYPE_EMAIL = '5';
+const MSG_TYPE_ROBOT = '6';
+
+var inputMap = new Map();
 
 class MessageTemplateInner extends Component {
     constructor(props) {
@@ -29,7 +38,8 @@ class MessageTemplateInner extends Component {
             pageNo: 0,
             pageSize: 10,
             key:'',
-            messageType : ''
+            messageType : '',
+            dinputData : {}
         };
     }
 
@@ -98,6 +108,31 @@ class MessageTemplateInner extends Component {
         console.log(value);
     };
 
+
+    // todo
+    handleDinputHandle = e => {
+
+        console.log(e.target.value);
+
+        // inputMap.set('keyword1', {"value": "keyword1", "color": "#173177"});
+        // inputMap.set('keyword2', {"value": "keyword2", "color": "#173177"});
+        //
+        // console.log(this.mapToJson(inputMap));
+        //
+        // this.setState({
+        //     dinputData: {
+        //         "keyword1": {
+        //             "value": "keyword1",
+        //             "color": "#173177"
+        //         }
+        //     }
+        // })
+    };
+
+    mapToJson = (map) => {
+        return JSON.stringify([...map]);
+    };
+
     //新建信息弹窗
     CreateItem = () => {
         this.setState({
@@ -123,23 +158,43 @@ class MessageTemplateInner extends Component {
             }
             console.log('Received values of form: ', values);
 
-            values.sendTime.include.start = values.sendTime.include.start._i;
-            values.sendTime.include.end = values.sendTime.include.end._i;
+            this.dealValues(values);
 
-            axios.post(MSGTEMPLATE_URL, values)
-                .then((response) => {
-                    if (response.data.code == 0) {
-                        this.notifySuccess();
-                        this.handleCancel();
-                        this.getData();
-                    } else {
-                        this.notifyError();
-                    }
-                })
-                .catch(function (error) {
-                    this.notifyError();
-                });
+            // axios.post(MSGTEMPLATE_URL, values)
+            //     .then((response) => {
+            //         if (response.data.code == 0) {
+            //             this.notifySuccess();
+            //             this.handleCancel();
+            //             this.getData();
+            //         } else {
+            //             this.notifyError();
+            //         }
+            //     })
+            //     .catch(function (error) {
+            //         this.notifyError();
+            //     });
         });
+    };
+
+    dealValues = (values) => {
+        console.log('dealValues' + this.state.dinputData);
+
+        values.sendTime.include.start = values.sendTime.include.start.format('HH:mm:ss');
+        values.sendTime.include.end = values.sendTime.include.end.format('HH:mm:ss');
+        if (values.messageType == MSG_TYPE_ROBOT) {
+            values.receiver = values.robotToken;
+        }
+        if (values.messageType == MSG_TYPE_DDGROUP) {
+            values.receiver = values.groupId;
+        }
+        if (values.messageType != MSG_TYPE_ROBOT && values.messageType != MSG_TYPE_DDGROUP) {
+            values.receiver = '';
+        }
+        if (values.messageType != MSG_TYPE_PUSH) {
+            values.content.transmissionType = '';
+            values.content.templateType = '';
+            values.content.osType = '';
+        }
     };
 
     //取消
@@ -167,22 +222,32 @@ class MessageTemplateInner extends Component {
     //点击修改
     editClick = (record) => {
         console.log(record.id);
-        axios.get(MSGTEMPLATE_URL + "/" + record.id)
+        axios.get(MSGTEMPLATE_URL + "/WC_NEWGOODS_RECOM_UNDER_SCAN_MSG")
             .then((response) => {
                 if (response.data.code == 0) {
                     console.log(response);
 
                     const dataobj = response.data.data;
                     const form = this.form;
-                    console.log(dataobj);
+
                     form.setFieldsValue({
                         name: dataobj.name,
                         code: dataobj.code,
                         messageType: dataobj.messageType + '',
                         messageChildType: dataobj.messageChildType + '',
-                        start: moment(dataobj.sendTime.include.start, 'HH:mm:ss'),
-                        end: moment(dataobj.sendTime.include.end, 'HH:mm:ss'),
-                        'content.content': dataobj.content.content
+                        'sendTime.include.start': moment(dataobj.sendTime.include.start, 'HH:mm:ss'),
+                        'sendTime.include.end': moment(dataobj.sendTime.include.end, 'HH:mm:ss'),
+                        'content.content': dataobj.content.content,
+                        'content.transmissionType': dataobj.content.transmissionType ? dataobj.content.transmissionType + '' : '1',
+                        'content.templateType': dataobj.content.templateType ? dataobj.content.templateType + '' : '1',
+                        'content.osType': dataobj.content.osType ? dataobj.content.osType + '' : '1',
+                        robotToken: dataobj.receiver,
+                        groupId: dataobj.receiver,
+                        'content.template_id': dataobj.content.template_id || '',
+                        'content.url': dataobj.content.url || '',
+                        'content.data.first.color': dataobj.content.data && dataobj.content.data.first.color || '',
+                        'content.data.remark.color': dataobj.content.data && dataobj.content.data.remark.color || '',
+                        'content.data.data': dataobj.content.data && dataobj.content.data.data || [1]
                     });
 
                     this.setState({
@@ -204,26 +269,25 @@ class MessageTemplateInner extends Component {
     //更新修改
     handleUpdate = () => {
         const form = this.form;
+
         form.validateFields((err, values) => {
             if (err) {
                 return;
             }
-            console.log('Received values of form: ', values.start._i);
-            console.log('Received values of form: ', values.end._i);
-
-            // axios.post(MSGTEMPLATE_URL, values)
-            //     .then((response) => {
-            //         if (response.data.code == 0) {
-            //             this.notifySuccess();
-            //             this.handleCancel();
-            //             this.getData();
-            //         } else {
-            //             this.notifyError();
-            //         }
-            //     })
-            //     .catch(function (error) {
-            //         this.notifyError();
-            //     });
+            this.dealValues(values);
+            axios.post(MSGTEMPLATE_URL, values)
+                .then((response) => {
+                    if (response.data.code == 0) {
+                        this.notifySuccess();
+                        this.handleCancel();
+                        this.getData();
+                    } else {
+                        this.notifyError();
+                    }
+                })
+                .catch(function (error) {
+                    this.notifyError();
+                });
         });
     };
 
@@ -262,8 +326,6 @@ class MessageTemplateInner extends Component {
                                     <Option value="4">推送</Option>
                                     <Option value="5">邮件</Option>
                                     <Option value="6">钉钉机器人</Option>
-                                    <Option value="7">钉钉微应用</Option>
-                                    <Option value="8">企业微信</Option>
                                 </Select>
                                 )}
                             </Col>
@@ -295,7 +357,7 @@ class MessageTemplateInner extends Component {
                     />
                     {isUpdate ?
                         <MessageTemplateCreateForm ref={this.saveFormRef} visible={visible} onCancel={this.handleCancel}
-                                                   onCreate={this.handleUpdate} title="修改" okText="更新"
+                                                   onCreate={this.handleUpdate} title="修改" okText="更新" handleDinputHandle={this.handleDinputHandle}
                         /> :
                         <MessageTemplateCreateForm ref={this.saveFormRef} visible={visible} onCancel={this.handleCancel}
                                                    onCreate={this.handleCreate} title="新建" okText="创建"
