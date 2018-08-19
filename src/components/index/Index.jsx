@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import BreadcrumbCustom from '../common/BreadcrumbCustom';
 import { Card, Avatar, Row, Col, Progress, Timeline, Collapse, Table, Icon } from 'antd';
 import zysoft from '../../style/img/avatar.jpg';
+import ncs from '../../style/img/ncs.jpeg';
 import './index.less';
 import CountUp from 'react-countup';
 import ReactEcharts from 'echarts-for-react';
@@ -196,136 +197,9 @@ export default class MIndex extends Component {
     }
     render() {
         return (
-            <div>
-                <BreadcrumbCustom paths={['首页']}/>
-                <div className='mindex'>
-                    <Row gutter={16}>
-                        {this.CountUp()}
-                    </Row>
-                    <Row gutter={16}>
-                        <Col md={16}>
-                            <Card
-                                style={{marginBottom:16}}
-                                bodyStyle={{padding: 0,height:'277px',overflow:'hidden'}}>
-                                <ReactEcharts
-                                    option={this.getOption()}
-                                />
-                            </Card>
-                        </Col>
-                        <Col md={8}>
-                            <Card
-                                style={{marginBottom:16}}
-                                bodyStyle={{padding: 0}}>
-                                <div className='avatar'>
-                                    <Avatar
-                                        shape='circle'
-                                        src={zysoft}
-                                        style={{width: '60px', height: '60px', borderRadius: '50%', marginBottom:16}}
-                                    />
-                                    <div>zysoft</div>
-                                    <div>zhaoyu_m69@163.com</div>
-                                </div>
-                                <div className='weather'>
-                                    {/*心知天气API*/}
-                                    <div className='weather-img'>
-                                        <img src={require('../../style/img/0.png')} alt=""/>
-                                    </div>
-                                    <div className='weather-info'>
-                                        <span>南京</span>&nbsp;<span>16℃</span>
-                                    </div>
-                                </div>
-                            </Card>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col md={8}>
-                            <Card style={{marginBottom:16}}>
-                                <div>
-                                    <h3>项目进度</h3>
-                                    <div>C#Winform/Smart React</div>
-                                </div>
-                                <div className='pro'>
-                                    <Row gutter={16}>
-                                        <Col span={12}>
-                                            <div>ACQ1</div>
-                                            <Progress type="dashboard" percent={25} width={125} id='pro1'/>
-                                        </Col>
-                                        <Col span={12}>
-                                            <div>SmartPress</div>
-                                            <Progress type="dashboard" percent={50} width={125} id='pro2'/>
-                                        </Col>
-                                    </Row>
-                                    <Row gutter={16}>
-                                        <Col span={12}>
-                                            <div>BUILD6</div>
-                                            <Progress type="dashboard" percent={75} width={125} id='pro3'/>
-                                        </Col>
-                                        <Col span={12}>
-                                            <div>MSPA</div>
-                                            <Progress type="dashboard" percent={100} width={125} format={() => 'Done'} id='pro4'/>
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </Card>
-                        </Col>
-                        <Col md={8}>
-                            <Card style={{marginBottom:16}}>
-                                <div>
-                                    <h3>项目流程</h3>
-                                </div>
-                                <div className="timeline">
-                                    <Timeline>
-                                        <Timeline.Item color="green">
-                                            <div  className="timeItem">创建项目 - 2017-10-01</div>
-                                            <div  className="timeItem">搭建UI框架 - 2017-10-02</div>
-                                            <div  className="timeItem">对接协议 - 2017-10-04</div>
-                                            <div  className="timeItem">实现功能 - 2017-10-05</div>
-                                        </Timeline.Item>
-                                        <Timeline.Item color="red">
-                                            <div  className="timeItem">通信调试 - 2017-10-10</div>
-                                            <div  className="timeItem">功能测试 - 2017-10-11</div>
-                                            <div  className="timeItem">错误调试 - 2017-10-13</div>
-                                        </Timeline.Item>
-                                        <Timeline.Item color="blue">
-                                            <div  className="timeItem">界面优化 - 2017-10-15</div>
-                                            <div  className="timeItem">性能优化 - 2017-10-17</div>
-                                            <div  className="timeItem">发布版本 - 2017-10-20</div>
-                                        </Timeline.Item>
-                                    </Timeline>
-                                </div>
-                            </Card>
-                        </Col>
-                        <Col md={8}>
-                            <Card
-                                style={{marginBottom:16}}
-                                bodyStyle={{height:'407px', overflow:'hidden'}}>
-                                <div>
-                                    <h3>人生感悟</h3>
-                                </div>
-                                <div className="collapse">
-                                    <Collapse accordion defaultActiveKey={"0"}>
-                                        {this.Panel()}
-                                    </Collapse>
-                                </div>
-                            </Card>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={24}>
-                            <Card>
-                                <div style={{marginBottom:16}}>
-                                    <h3>留言板</h3>
-                                </div>
-                                <Table
-                                    columns={columns}
-                                    dataSource={data}
-                                    scroll={{ x: '110%' }}
-                                    pagination = {false}
-                                />
-                            </Card>
-                        </Col>
-                    </Row>
-                </div>
+            <div className="ani-box">
+                <span className="animated flipInX ege">←_← 首页建设中，功能直接操作菜单哈！</span>
+                <img src={ncs} width="800" className="animated fadeInUp lastPic" />
             </div>
         )
     }
