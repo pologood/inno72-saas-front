@@ -70,6 +70,7 @@ class MessageTemplateForm extends Component {
     };
 
     handleMessageTypeClick = e => {
+        console.log(e.target.value);
         this.setState({messageType: e.target.value}, () => {
             this.showHide()
         });
@@ -186,7 +187,7 @@ class MessageTemplateForm extends Component {
         let inputName = 'name-';
         let inputColor = 'color-';
 
-        dbtn = <Button type="primary" onClick={this.addInput}>+增加自定义参数</Button>;
+        dbtn = <Button type="primary" onClick={this.addInput} style={{marginLeft:'508px'}}>+增加自定义参数</Button>;
 
         this.state.arrInput.map((item, index) => (
             dinput.push(

@@ -42,6 +42,7 @@ class MessageTemplateInner extends Component {
             pageSize: 10,
             key:'',
             messageType : '',
+            messageChildTypeArr: [],
             dinputData : {}
         };
     }
@@ -52,7 +53,8 @@ class MessageTemplateInner extends Component {
                 page: this.state.pageNo,
                 size: this.state.pageSize,
                 key : this.state.key,
-                messageType : this.state.messageType
+                messageType : this.state.messageType,
+                messageChildType : this.state.messageChildType
             }
         })
         .then(function (response) {
@@ -99,7 +101,8 @@ class MessageTemplateInner extends Component {
             this.setState({
                 page: 0,
                 key: fieldsValue.key ? fieldsValue.key : '',
-                messageType: fieldsValue.messageType ? fieldsValue.messageType : ''
+                messageType: fieldsValue.messageType ? fieldsValue.messageType : '',
+                messageChildType: fieldsValue.messageChildType ? fieldsValue.messageChildType : ''
             }, () => {
                 this.getData();
             });
@@ -107,8 +110,41 @@ class MessageTemplateInner extends Component {
     };
 
     // 选择消息类型
-    handleChange = value => {
-        console.log(value);
+    handleMessageTypeClick = value => {
+        let messageType = value;
+        if (messageType == '') {
+            this.setState({messageChildTypeArr: []});
+        }
+
+        if (messageType == MSG_TYPE_WECHAT) {
+            this.setState({
+                messageChildTypeArr: [
+                    {'name': '文本', 'val': '1'},
+                    {'name': '微信模板', 'val': '2'}
+                ]
+            });
+        }
+        if (messageType == MSG_TYPE_DDGROUP || messageType == MSG_TYPE_ROBOT) {
+            this.setState({
+                messageChildTypeArr: [
+                    {'name': '文本', 'val': '1'},
+                    {'name': '链接', 'val': '2'}
+                ]
+            });
+        }
+        if (messageType == MSG_TYPE_MSG) {
+            this.setState({
+                messageChildTypeArr: [
+                    {'name': '云片', 'val': '1'}
+                ]
+            });
+        }
+        if (messageType == MSG_TYPE_PUSH || messageType == MSG_TYPE_EMAIL) {
+            this.setState({
+                messageChildTypeArr: []
+            });
+        }
+
     };
 
     //新建信息弹窗
@@ -314,7 +350,7 @@ class MessageTemplateInner extends Component {
                         <Row gutter={16}>
                             <Col className="gutter-row" sm={4} md={2}>
                                 {getFieldDecorator('messageType')(
-                                <Select placeholder="请选择" style={{ width: 95 ,paddingTop:3.5}} onChange={this.handleChange}>
+                                <Select placeholder="请选择" style={{ width: 95 ,paddingTop:3.5}} onChange={this.handleMessageTypeClick}>
                                     <Option value="">全部</Option>
                                     <Option value="1">微信</Option>
                                     <Option value="2">钉钉群</Option>
@@ -325,6 +361,22 @@ class MessageTemplateInner extends Component {
                                 </Select>
                                 )}
                             </Col>
+
+                            <Col className="gutter-row" sm={4} md={2}>
+                                {getFieldDecorator('messageChildType')(
+                                <Select placeholder="请选择" style={{ width: 95 ,paddingTop:3.5}}>
+                                    <Option value="">全部</Option>
+                                    {
+                                        this.state.messageChildTypeArr.map(function (item,index) {
+                                            return (
+                                                <Option key={index} value={item.val}>{item.name}</Option>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                                )}
+                            </Col>
+
                             <Col className="gutter-row" sm={5}>
                                 <FormItem>
                                     {getFieldDecorator('key')(<Input placeholder="名称/Code" />)}
