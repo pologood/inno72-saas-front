@@ -13,6 +13,7 @@ import noMatch from './404';
 import RichText from "../richText/RichText";
 import UploadEditor from "../upload/UploadEditor";
 import MessageTemplate from "../message/messageTemplate/MessageTemplate";
+import MessageHistory from "../message/messageHistory/MessageHistory";
 
 const {Content, Footer} = Layout;
 
@@ -52,7 +53,7 @@ export default class App extends Component {
                     <HeaderCustom collapsed={collapsed} toggle={this.toggle} username={name}/>
                     <Content style={{margin: '0 16px'}}>
                         <Switch>
-                            <Route exact path={'/app'} component={MIndex} />
+                            <Route exact path={'/app'} component={MessageTemplate} />
                             <Route exact path={'/app/form'} component={UForm} />
                             <Route exact path={'/app/header/Calendars'} component={Calendars} />
                             <Route exact path={'/app/chart/echarts'} component={Echarts} />
@@ -60,6 +61,8 @@ export default class App extends Component {
                             <Route exact path={'/app/upload'} component={UploadEditor} />
 
                             <Route exact path={'/app/message/messageTemplate'} component={MessageTemplate} />
+                            <Route exact path={'/app/message/messageHistory'} component={MessageHistory} />
+
                             <Route component={noMatch} />
                         </Switch>
                     </Content>

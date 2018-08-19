@@ -209,7 +209,6 @@ class MessageTemplateForm extends Component {
                 okText={okText}
                 onCancel={onCancel}
                 onOk={onCreate}
-                onText={this.test}
             >
                 <Form layout="horizontal">
                     <FormItem label="名称" {...FormItemLayout} hasFeedback>

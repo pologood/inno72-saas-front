@@ -64,12 +64,12 @@ export default class SiderCustom extends Component{
                     openKeys={firstHide ? null : [openKey]}
                 >
 
-                    <Menu.Item key={"/app"}>
-                        <Link to={"/app"}><Icon type="home" /><span>首页</span></Link>
-                    </Menu.Item>
-                    <Menu.Item key={"/app/form"}>
-                        <Link to={"/app/form"}><Icon type="form" /><span>表单</span></Link>
-                    </Menu.Item>
+                    {/*<Menu.Item key={"/app"}>*/}
+                        {/*<Link to={"/app"}><Icon type="home" /><span>首页</span></Link>*/}
+                    {/*</Menu.Item>*/}
+                    {/*<Menu.Item key={"/app/form"}>*/}
+                        {/*<Link to={"/app/form"}><Icon type="form" /><span>表单</span></Link>*/}
+                    {/*</Menu.Item>*/}
 
                     <SubMenu
                         key="/app/chart"
@@ -79,17 +79,17 @@ export default class SiderCustom extends Component{
                             <Link to={'/app/message/messageTemplate'}><span>消息模板</span></Link>
                         </Menu.Item>
 
-                        <Menu.Item key="/app/chart/echarts">
-                            <Link to={'/app/chart/echarts'}><span>历史消息</span></Link>
+                        <Menu.Item key="/app/message/messageHistory">
+                            <Link to={'/app/message/messageHistory'}><span>历史消息</span></Link>
                         </Menu.Item>
                     </SubMenu>
 
-                    <Menu.Item key="/app/richText">
-                        <Link to={'/app/richText'}><Icon type="edit" /><span>富文本</span></Link>
-                    </Menu.Item>
-                    <Menu.Item key="/app/upload">
-                        <Link to={'/app/upload'}><Icon type="upload" /><span>文件上传</span></Link>
-                    </Menu.Item>
+                    {/*<Menu.Item key="/app/richText">*/}
+                        {/*<Link to={'/app/richText'}><Icon type="edit" /><span>富文本</span></Link>*/}
+                    {/*</Menu.Item>*/}
+                    {/*<Menu.Item key="/app/upload">*/}
+                        {/*<Link to={'/app/upload'}><Icon type="upload" /><span>文件上传</span></Link>*/}
+                    {/*</Menu.Item>*/}
                 </Menu>
             </Sider>
         )

@@ -344,7 +344,7 @@ class MessageTemplateInner extends Component {
         const { getFieldDecorator } = form;
         return (
             <div>
-                <BreadcrumbCustom paths={['首页', '表单']}/>
+                <BreadcrumbCustom paths={['消息管理', '消息模板']}/>
                 <div className='formBody'>
                     <Form onSubmit={this.handleSearch}>
                         <Row gutter={16}>
