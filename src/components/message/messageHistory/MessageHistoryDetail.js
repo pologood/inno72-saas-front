@@ -40,7 +40,6 @@ class MessageHistoryDetail extends Component {
 
     render() {
         const {visible, onCancel, title, messageHistory} = this.props;
-        console.log(messageHistory.content);
         return (
             <Modal
                 width={800}

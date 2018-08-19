@@ -10,8 +10,7 @@ import MessageTemplateTable from './MessageTemplateTable';
 
 import moment from 'moment';
 
-var MSGTEMPLATE_URL = "http://api.msg.inner.72solo.com/msgTemplate";
-// var MSGTEMPLATE_URL = "http://msg.pinwheelmedical.com/msgTemplate";
+const MSGTEMPLATE_URL = "http://api.msg.inner.72solo.com/msgTemplate";
 
 const FormItem = Form.Item;
 const Option = Select.Option;

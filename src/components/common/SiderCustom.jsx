@@ -61,7 +61,6 @@ export default class SiderCustom extends Component{
                     selectedKeys={[selectedKey]}
                     onClick={this.menuClick}
                     onOpenChange={this.openMenu}
-                    openKeys={firstHide ? null : [openKey]}
                 >
 
                     {/*<Menu.Item key={"/app"}>*/}

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './MessageHistory.less';
 
 import axios from 'axios';
-import {Row, Col, Input, Icon, Button, notification, Form, Select} from 'antd';
+import {Row, Col, Input, Icon, Button, notification, Form, Select, DatePicker} from 'antd';
 
 import BreadcrumbCustom from '../../common/BreadcrumbCustom';
 import MessageHistoryDetail from './MessageHistoryDetail';
@@ -10,11 +10,13 @@ import MessageHistoryTable from './MessageHistoryTable';
 
 import moment from 'moment';
 
-var MSGTEMPLATE_URL = "http://msg.pinwheelmedical.com/msg";
-// var MSGTEMPLATE_URL = "http://msg.pinwheelmedical.com/msgTemplate";
+console.log(process.env);
+
+var MSGTEMPLATE_URL = "http://api.msg.inner.72solo.com/msg";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
+const RangePicker = DatePicker.RangePicker;
 
 class MessageHistoryInner extends Component {
     constructor(props) {
@@ -29,7 +31,10 @@ class MessageHistoryInner extends Component {
             pageNo: 0,
             pageSize: 10,
             key:'',
-            messageHistory:{}
+            messageHistory:{},
+            status:'',
+            startTime:'',
+            endTime:''
         };
     }
 
@@ -37,11 +42,15 @@ class MessageHistoryInner extends Component {
         axios.get(MSGTEMPLATE_URL, {
             params: {
                 page: this.state.pageNo,
-                size: this.state.pageSize
+                size: this.state.pageSize,
+                key: this.state.key,
+                status: this.state.status,
+                startTime:this.state.startTime,
+                endTime:this.state.endTime
             }
         })
         .then(function (response) {
-            console.log(response.data);
+            // console.log(response.data);
             this.setState({
                 dataSource: response.data.data,
                 loading: false
@@ -80,12 +89,14 @@ class MessageHistoryInner extends Component {
         e.preventDefault();
         const { form } = this.props;
         form.validateFields((err, fieldsValue) => {
+            console.log(fieldsValue);
             if (err) return;
             this.setState({
                 page: 0,
                 key: fieldsValue.key ? fieldsValue.key : '',
-                messageType: fieldsValue.messageType ? fieldsValue.messageType : '',
-                messageChildType: fieldsValue.messageChildType ? fieldsValue.messageChildType : ''
+                status: fieldsValue.status ? fieldsValue.status : '',
+                startTime: fieldsValue.searchTime ? fieldsValue.searchTime[0].format('YYYY-MM-DDTHH:mm:ss') : '',
+                endTime: fieldsValue.searchTime ? fieldsValue.searchTime[1].format('YYYY-MM-DDTHH:mm:ss') : ''
             }, () => {
                 this.getData();
             });
@@ -109,19 +120,16 @@ class MessageHistoryInner extends Component {
 
     //点击查看详情
     detailClick = (record) => {
-        console.log(record.id);
         axios.get(MSGTEMPLATE_URL + "/" + record.id)
             .then((response) => {
                 if (response.data.code == 0) {
-                    console.log(response);
+                    // console.log(response);
 
                     let dataobj = response.data.data;
 
                     this.setState({
                         messageHistory: dataobj
                     });
-
-                    console.log(dataobj);
 
                     this.setState({
                         visible: true,
@@ -133,7 +141,6 @@ class MessageHistoryInner extends Component {
                 }
             })
             .catch(function (error) {
-                console.log(error);
                 this.notifyError();
             });
 
@@ -164,10 +171,32 @@ class MessageHistoryInner extends Component {
                 <div className='formBody'>
                     <Form onSubmit={this.handleSearch}>
                         <Row gutter={16}>
+                            <Col className="gutter-row" sm={6} md={3}>
+                                {getFieldDecorator('status')(
+                                    <Select placeholder="请选择" style={{ width: 130 ,paddingTop:3.5}}>
+                                        <Option key="0" value="">全部</Option>
+                                        <Option key="1" value="0">发送成功</Option>
+                                        <Option key="2" value="1">发送失败</Option>
+                                    </Select>
+                                )}
+                            </Col>
+
                             <Col className="gutter-row" sm={5}>
                                 <FormItem>
-                                    {getFieldDecorator('key')(<Input placeholder="名称/Code" />)}
+                                    {getFieldDecorator('key')(<Input placeholder="接受方/发送方" />)}
                                 </FormItem>
+                            </Col>
+
+                            <Col className="gutter-row" sm={6}>
+                                {getFieldDecorator('searchTime')(
+                                    <RangePicker
+                                        style={{ paddingTop:3.5}}
+                                        ranges={{ 今天: [moment(), moment()], '当月': [moment(), moment().endOf('month')] }}
+                                        showTime
+                                        format="YYYY-MM-DD HH:mm:ss"
+                                        placeholder={['开始时间','结束时间']}
+                                    />
+                                )}
                             </Col>
                         </Row>
 
