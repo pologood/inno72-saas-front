@@ -37,7 +37,7 @@ class NormalLoginForm extends Component {
                     });
 
                     localStorage.setItem('mspa_user',JSON.stringify(values));
-                    message.success('login successed!'); //成功信息
+                    message.success('登陆成功!'); //成功信息
                     let that = this;
                     setTimeout(function() { //延迟进入
                         that.props.history.push({pathname:'/app',state:values});
@@ -57,7 +57,7 @@ class NormalLoginForm extends Component {
             <div className="login">
                 <div className="login-form">
                     <div className="login-logo">
-                        <div className="login-name">MSPA</div>
+                        <div className="login-name">点72 SAAS</div>
                     </div>
                     <Form onSubmit={this.handleSubmit} style={{maxWidth: '300px'}}>
                         <FormItem>
@@ -81,14 +81,12 @@ class NormalLoginForm extends Component {
                             })(
                                 <Checkbox>记住我</Checkbox>
                             )}
-                            <a className="login-form-forgot" href="" style={{float:'right'}}>忘记密码?</a>
                             <Button type="primary" htmlType="submit" className="login-form-button" style={{width: '100%'}}>
                                 登录
                             </Button>
-                            Or <a href="">现在就去注册!</a>
+                            系统正在完善，临时使用admin/admin
                         </FormItem>
                     </Form>
-                    <a className="githubUrl" href="https://github.com/zhaoyu69/antd-spa"> </a>
                 </div>
             </div>
         );
