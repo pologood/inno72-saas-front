@@ -10,9 +10,9 @@ import MessageHistoryTable from './MessageHistoryTable';
 
 import moment from 'moment';
 
-console.log(process.env);
+console.log(process.env.NODE_ENV);
 
-var MSGTEMPLATE_URL = "http://api.msg.inner.72solo.com/msg";
+var MSGTEMPLATE_URL = "http://api.msg.inner.36solo.com/msg";
 
 const FormItem = Form.Item;
 const Option = Select.Option;

@@ -10,7 +10,7 @@ import MessageTemplateTable from './MessageTemplateTable';
 
 import moment from 'moment';
 
-const MSGTEMPLATE_URL = "http://api.msg.inner.72solo.com/msgTemplate";
+const MSGTEMPLATE_URL = "http://api.msg.inner.36solo.com/msgTemplate";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -230,8 +230,13 @@ class MessageTemplateInner extends Component {
 
     //单个删除
     onDelete = (record) => {
+        debugger;
         console.log(record.id);
-        axios.delete(MSGTEMPLATE_URL + "/" + record.id)
+        axios.post(MSGTEMPLATE_URL + "/delete", {
+            params : {
+                id : record.id
+            }
+        })
             .then((response) => {
                 if (response.data.code == 0) {
                     this.notifySuccess();
