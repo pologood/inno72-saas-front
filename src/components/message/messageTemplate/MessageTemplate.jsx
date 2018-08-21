@@ -230,13 +230,8 @@ class MessageTemplateInner extends Component {
 
     //单个删除
     onDelete = (record) => {
-        debugger;
         console.log(record.id);
-        axios.post(MSGTEMPLATE_URL + "/delete", {
-            params : {
-                id : record.id
-            }
-        })
+        axios.delete(MSGTEMPLATE_URL + "/" + record.id)
             .then((response) => {
                 if (response.data.code == 0) {
                     this.notifySuccess();
