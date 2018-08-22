@@ -16,7 +16,7 @@ childTypeText.set('1-2', '模板消息');
 childTypeText.set('2-1', '文本');
 childTypeText.set('2-2', '链接');
 childTypeText.set('3-1', '云片');
-childTypeText.set('3-1', '筑望');
+childTypeText.set('3-2', '筑望');
 childTypeText.set('4-1', '文本');
 childTypeText.set('5-1', '文本');
 childTypeText.set('6-1', '文本');
