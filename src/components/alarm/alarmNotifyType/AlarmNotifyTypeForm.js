@@ -55,6 +55,13 @@ class AlarmNotifyTypeForm extends Component {
                             <Input/>
                         )}
                     </FormItem>
+
+                    <FormItem label="" {...FormItemLayout} style={{display: 'none'}}>
+                        {getFieldDecorator('id', {
+                        })(
+                            <Input/>
+                        )}
+                    </FormItem>
                 </Form>
             </Modal>
         );

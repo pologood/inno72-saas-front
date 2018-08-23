@@ -19,7 +19,7 @@ export default class AlarmNotifyTypeTable extends Component{
         },
             {
             title: '创建时间',
-            dataIndex: 'todo'
+            dataIndex: 'createTime'
         } , {
             title: '操作',
             dataIndex: 'opera',

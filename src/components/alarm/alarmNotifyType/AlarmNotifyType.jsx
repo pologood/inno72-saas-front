@@ -13,9 +13,6 @@ import moment from 'moment';
 
 const ALARM_NOTIFY_TYPE_URL = urls('ALARM_URL') + '/alarm/msg/type';
 
-const FormItem = Form.Item;
-const Option = Select.Option;
-
 class AlarmNotifyTypeInner extends Component {
     constructor(props) {
         super(props);
@@ -89,41 +86,6 @@ class AlarmNotifyTypeInner extends Component {
         this.form = form;
     };
 
-    //填充表格行
-    handleCreate = () => {
-
-        const {dataSource} = this.state;
-        const form = this.form;
-        form.validateFields((err, values) => {
-            if (err) {
-                return;
-            }
-            console.log('Received values of form: ', values);
-
-            var params = new URLSearchParams();
-            params.append('name', values.name);
-            params.append('key', values.key);
-
-            axios.post(ALARM_NOTIFY_TYPE_URL + '/add', params, {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-            })
-                .then((response) => {
-                    if (response.data.code == 0) {
-                        this.notifySuccess();
-                        this.handleCancel();
-                        this.getData();
-                    } else {
-                        this.notifyError();
-                    }
-                })
-                .catch(function (error) {
-                    this.notifyError();
-                });
-        });
-    };
-
     //取消
     handleCancel = () => {
         this.setState({visible: false});
@@ -165,6 +127,7 @@ class AlarmNotifyTypeInner extends Component {
                     const form = this.form;
 
                     form.setFieldsValue({
+                        id: dataobj.id,
                         name: dataobj.name,
                         key: dataobj.key
                     });
@@ -186,7 +149,7 @@ class AlarmNotifyTypeInner extends Component {
     };
 
     //更新修改
-    handleUpdate = () => {
+    handleSaveAndUpdate = () => {
         const form = this.form;
 
         form.validateFields((err, values) => {
@@ -195,6 +158,9 @@ class AlarmNotifyTypeInner extends Component {
             }
 
             var params = new URLSearchParams();
+            if (values.id) {
+                params.append('id', values.id);
+            }
             params.append('name', values.name);
             params.append('key', values.key);
 
@@ -262,11 +228,11 @@ class AlarmNotifyTypeInner extends Component {
                     {isUpdate ?
                         <AlarmNotifyTypeCreateForm ref={this.saveFormRef} visible={visible} onCancel={this.handleCancel}
                                                    onRef={this.onRef}
-                                                   onCreate={this.handleUpdate} title="修改" okText="更新"
+                                                   onCreate={this.handleSaveAndUpdate} title="修改" okText="更新"
                         /> :
                         <AlarmNotifyTypeCreateForm ref={this.saveFormRef} visible={visible} onCancel={this.handleCancel}
                                                    onRef={this.onRef}
-                                                   onCreate={this.handleCreate} title="新建" okText="创建"
+                                                   onCreate={this.handleSaveAndUpdate} title="新建" okText="创建"
                         />}
                 </div>
             </div>

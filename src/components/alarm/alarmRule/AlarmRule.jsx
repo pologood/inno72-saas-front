@@ -90,7 +90,7 @@ class AlarmRuleInner extends Component {
     };
 
     //填充表格行
-    handleCreate = () => {
+    handleSaveAndUpdate = () => {
 
         const {dataSource} = this.state;
         const form = this.form;
@@ -119,6 +119,9 @@ class AlarmRuleInner extends Component {
 
     dealValues = (values) => {
         console.log(values);
+        if (values.alarmRule.id) {
+            values.alarmRule.id = values.alarmRule.id;
+        }
         values.alarmRule.startTime = values.alarmRule.startTime.format('HH:mm:ss');
         values.alarmRule.endTime = values.alarmRule.endTime.format('HH:mm:ss');
         values.alarmRule.description = 'todo';
@@ -165,6 +168,7 @@ class AlarmRuleInner extends Component {
                     const form = this.form;
 
                     form.setFieldsValue({
+                        'alarmRule.id': dataobj.alarmRule.id,
                         'alarmRule.name': dataobj.alarmRule.name,
                         'alarmRule.appName': dataobj.alarmRule.appName,
                         'alarmRule.ruleType': dataobj.alarmRule.ruleType,
@@ -234,11 +238,11 @@ class AlarmRuleInner extends Component {
                     {isUpdate ?
                         <AlarmRuleCreateForm ref={this.saveFormRef} visible={visible} onCancel={this.handleCancel}
                                                    onRef={this.onRef}
-                                                   onCreate={this.handleCreate} title="修改" okText="更新"
+                                                   onCreate={this.handleSaveAndUpdate} title="修改" okText="更新"
                         /> :
                         <AlarmRuleCreateForm ref={this.saveFormRef} visible={visible} onCancel={this.handleCancel}
                                                    onRef={this.onRef}
-                                                   onCreate={this.handleCreate} title="新建" okText="创建"
+                                                   onCreate={this.handleSaveAndUpdate} title="新建" okText="创建"
                         />}
                 </div>
             </div>
