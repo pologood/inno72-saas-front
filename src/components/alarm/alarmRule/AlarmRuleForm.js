@@ -24,13 +24,11 @@ class AlarmRuleForm extends Component {
     }
 
     componentDidMount() {
-        // 初始化 负责人  消息接收人 报警方式
         console.log('componentDidMount');
         this.initUser();
         this.initNotifyType();
     }
 
-    // 初始化用户数据 包括负责人列表， 报警人列表
     initUser = () => {
         axios.get(ALARM_USER_URL + '/getList', {
             params: {
