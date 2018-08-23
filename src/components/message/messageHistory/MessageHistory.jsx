@@ -11,7 +11,7 @@ import MessageHistoryTable from './MessageHistoryTable';
 import moment from 'moment';
 import {urls} from "../../common/Urls";
 
-const MESSAGEHISTORY_URL = urls('MESSAGEHISTORY_URL');
+const MESSAGEHISTORY_URL = urls('MESSAGE_URL') + '/msg';
 
 const FormItem = Form.Item;
 const Option = Select.Option;

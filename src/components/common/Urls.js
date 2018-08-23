@@ -1,21 +1,21 @@
-const MSGTEMPLATE_URL = {
-    'development': 'http://api.msg.inner.72solo.com/msgTemplate',
-    'test': 'http://api.msg.inner.36solo.com/msgTemplate',
-    'production': 'http://api.msg.inner72.com/msgTemplate'
+const env = process.env.NODE_ENV;
+
+const MESSAGE_URL = {
+    'development': 'http://api.msg.inner.72solo.com',
+    'test': 'http://api.msg.inner.36solo.com',
+    'production': 'http://api.msg.inner72.com'
 };
 
-const MESSAGEHISTORY_URL = {
-    'development': 'http://api.msg.inner.72solo.com/msg',
-    'test': 'http://api.msg.inner.36solo.com/msg',
-    'production': 'http://api.msg.inner72.com/msg'
+const ALARM_URL = {
+    'development': 'http://127.0.0.1:8082',
+    'test': 'http://pre_test.72solo.com:30516',
+    'production': 'http://pre_test.72solo.com:30516'
 };
 
 const URLS = {
-    'MSGTEMPLATE_URL': MSGTEMPLATE_URL,
-    'MESSAGEHISTORY_URL' : MESSAGEHISTORY_URL
+    'MESSAGE_URL': MESSAGE_URL,
+    'ALARM_URL' : ALARM_URL
 };
-
-const env = process.env.NODE_ENV;
 
 export function urls(key) {
     console.log('env is ' + env + ' key is ' + key);

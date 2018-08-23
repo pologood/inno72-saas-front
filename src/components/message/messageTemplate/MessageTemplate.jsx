@@ -11,7 +11,7 @@ import MessageTemplateTable from './MessageTemplateTable';
 
 import moment from 'moment';
 
-const MSGTEMPLATE_URL = urls('MSGTEMPLATE_URL');
+const MSGTEMPLATE_URL = urls('MESSAGE_URL') + '/msgTemplate';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
