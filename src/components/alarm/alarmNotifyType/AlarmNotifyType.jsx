@@ -7,10 +7,11 @@ import {Row, Col, Input, Icon, Button, notification, Form, Select} from 'antd';
 import BreadcrumbCustom from '../../common/BreadcrumbCustom';
 import AlarmNotifyTypeCreateForm from './AlarmNotifyTypeForm';
 import AlarmNotifyTypeTable from './AlarmNotifyTypeTable';
+import {urls} from "../../common/Urls";
 
 import moment from 'moment';
 
-const ALARM_NOTIFY_TYPE_URL = "http://pre_test.72solo.com:30516/alarm/msg/type";
+const ALARM_NOTIFY_TYPE_URL = urls('ALARM_URL') + '/alarm/msg/type';
 
 const FormItem = Form.Item;
 const Option = Select.Option;

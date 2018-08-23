@@ -9,8 +9,9 @@ import AlarmUserCreateForm from './AlarmUserForm';
 import AlarmUserTable from './AlarmUserTable';
 
 import moment from 'moment';
+import {urls} from "../../common/Urls";
 
-const ALARM_USER_URL = "http://pre_test.72solo.com:30516/alarm/user";
+const ALARM_USER_URL = urls('ALARM_URL') + '/alarm/user';
 
 const FormItem = Form.Item;
 const Option = Select.Option;

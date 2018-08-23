@@ -9,8 +9,9 @@ import AlarmRuleCreateForm from './AlarmRuleForm';
 import AlarmRuleTable from './AlarmRuleTable';
 
 import moment from 'moment';
+import {urls} from "../../common/Urls";
 
-const ALARM_NOTIFY_TYPE_URL = "http://pre_test.72solo.com:30516/alarm/rule";
+const ALARM_RULE_URL = urls('ALARM_URL') + '/alarm/rule';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -35,7 +36,7 @@ class AlarmRuleInner extends Component {
     }
 
     getData = () => {
-        axios.get(ALARM_NOTIFY_TYPE_URL + '/getList', {
+        axios.get(ALARM_RULE_URL + '/getList', {
             params: {}
         })
             .then(function (response) {
@@ -100,7 +101,7 @@ class AlarmRuleInner extends Component {
             console.log('Received values of form: ', values);
             this.dealValues(values);
 
-            axios.post(ALARM_NOTIFY_TYPE_URL + '/save', values)
+            axios.post(ALARM_RULE_URL + '/save', values)
             .then((response) => {
                 if (response.data.code == 0) {
                     this.notifySuccess();
@@ -135,7 +136,7 @@ class AlarmRuleInner extends Component {
         var params = new URLSearchParams();
         params.append('id', record.id);
 
-        axios.post(ALARM_NOTIFY_TYPE_URL + "/delete", params, {
+        axios.post(ALARM_RULE_URL + "/delete", params, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
@@ -156,7 +157,7 @@ class AlarmRuleInner extends Component {
     //点击修改
     editClick = (record) => {
         console.log(record.id);
-        axios.get(ALARM_NOTIFY_TYPE_URL + "/detail?id=" + record.id)
+        axios.get(ALARM_RULE_URL + "/detail?id=" + record.id)
             .then((response) => {
                 if (response.data.code == 0) {
                     console.log(response);

@@ -4,12 +4,13 @@ import moment from 'moment';
 import './AlarmRule.less';
 import {notification} from "antd/lib/index";
 import axios from "axios/index";
+import {urls} from "../../common/Urls";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-const ALARM_NOTIFY_TYPE_URL = "http://pre_test.72solo.com:30516/alarm/msg/type";
-const ALARM_USER_URL = "http://pre_test.72solo.com:30516/alarm/user";
+const ALARM_NOTIFY_TYPE_URL = urls('ALARM_URL') + '/alarm/msg/type';
+const ALARM_USER_URL = urls('ALARM_URL') + '/alarm/user';
 
 class AlarmRuleForm extends Component {
     state = {
