@@ -1,26 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Icon, Popconfirm } from 'antd';
 import {notification} from "antd/lib/index";
-
-let msgTypeMap = new Map();
-msgTypeMap.set(1, '微信');
-msgTypeMap.set(2, '钉钉群');
-msgTypeMap.set(3, '短信');
-msgTypeMap.set(4, '推送');
-msgTypeMap.set(5, '邮件');
-msgTypeMap.set(6, '机器人');
-
-let childTypeText = new Map();
-childTypeText.set('1-1', '微信/文本');
-childTypeText.set('1-2', '微信/模板消息');
-childTypeText.set('2-1', '钉钉/文本');
-childTypeText.set('2-2', '钉钉/链接');
-childTypeText.set('3-1', '短信/云片');
-childTypeText.set('3-2', '短信/筑望');
-childTypeText.set('4-1', '推送/文本');
-childTypeText.set('5-1', '邮件/文本');
-childTypeText.set('6-1', '机器人/文本');
-childTypeText.set('6-2', '机器人/链接');
+import {msgType, msgTypeText} from '../common/Message';
 
 export default class MessageHistoryTable extends Component{
     constructor(props){
@@ -45,7 +26,7 @@ export default class MessageHistoryTable extends Component{
             title: '消息类型',
             dataIndex: 'model.messageChildType',
             render: (text, record) => (
-                childTypeText.get(record.model.messageType + '-' + text)
+                msgTypeText(record.model.messageType + '-' + text)
             )
         },{
             title: '发送方',

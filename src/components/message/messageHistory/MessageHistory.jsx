@@ -9,10 +9,9 @@ import MessageHistoryDetail from './MessageHistoryDetail';
 import MessageHistoryTable from './MessageHistoryTable';
 
 import moment from 'moment';
+import {urls} from "../../common/Urls";
 
-console.log(process.env.NODE_ENV);
-
-var MSGTEMPLATE_URL = "http://api.msg.inner.36solo.com/msg";
+const MESSAGEHISTORY_URL = urls('MESSAGEHISTORY_URL');
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -39,7 +38,7 @@ class MessageHistoryInner extends Component {
     }
 
     getData = () => {
-        axios.get(MSGTEMPLATE_URL, {
+        axios.get(MESSAGEHISTORY_URL, {
             params: {
                 page: this.state.pageNo,
                 size: this.state.pageSize,
@@ -120,7 +119,7 @@ class MessageHistoryInner extends Component {
 
     //点击查看详情
     detailClick = (record) => {
-        axios.get(MSGTEMPLATE_URL + "/" + record.id)
+        axios.get(MESSAGEHISTORY_URL + "/" + record.id)
             .then((response) => {
                 if (response.data.code == 0) {
                     // console.log(response);

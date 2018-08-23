@@ -5,12 +5,13 @@ import axios from 'axios';
 import {Row, Col, Input, Icon, Button, notification, Form, Select} from 'antd';
 
 import BreadcrumbCustom from '../../common/BreadcrumbCustom';
+import {urls} from '../../common/Urls';
 import MessageTemplateCreateForm from './MessageTemplateForm';
 import MessageTemplateTable from './MessageTemplateTable';
 
 import moment from 'moment';
 
-const MSGTEMPLATE_URL = "http://api.msg.inner.36solo.com/msgTemplate";
+const MSGTEMPLATE_URL = urls('MSGTEMPLATE_URL');
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -24,8 +25,6 @@ const MSG_TYPE_ROBOT = '6';
 
 const MSG_CHILD_TYPE_TEXT = '1';
 const MSG_CHILD_TYPE_TEMPLATE = '2';
-
-var inputMap = new Map();
 
 class MessageTemplateInner extends Component {
     constructor(props) {

@@ -2,25 +2,7 @@ import React, { Component } from 'react';
 import { Table, Icon, Popconfirm } from 'antd';
 import {notification} from "antd/lib/index";
 
-let msgTypeMap = new Map();
-msgTypeMap.set(1, '微信');
-msgTypeMap.set(2, '钉钉群');
-msgTypeMap.set(3, '短信');
-msgTypeMap.set(4, '推送');
-msgTypeMap.set(5, '邮件');
-msgTypeMap.set(6, '机器人');
-
-let childTypeText = new Map();
-childTypeText.set('1-1', '文本');
-childTypeText.set('1-2', '模板消息');
-childTypeText.set('2-1', '文本');
-childTypeText.set('2-2', '链接');
-childTypeText.set('3-1', '云片');
-childTypeText.set('3-2', '筑望');
-childTypeText.set('4-1', '文本');
-childTypeText.set('5-1', '文本');
-childTypeText.set('6-1', '文本');
-childTypeText.set('6-2', '链接');
+import {msgType, childTypeText} from '../common/Message';
 
 export default class MessageTemplateTable extends Component{
     constructor(props){
@@ -43,14 +25,14 @@ export default class MessageTemplateTable extends Component{
             title: '类型',
             dataIndex: 'messageType',
             render: (text, record) => (
-                msgTypeMap.get(text)
+                msgType(text)
             )
         }, {
             title: '子类型',
             dataIndex: 'messageChildType',
             width:'80px',
             render: (text, record) => (
-                childTypeText.get(record.messageType + '-' + text)
+                childTypeText(record.messageType + '-' + text)
             )
         },{
             title: '操作',
