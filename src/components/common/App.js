@@ -66,9 +66,9 @@ export default class App extends Component {
                             <Route exact path={'/app/message/messageTemplate'} component={MessageTemplate} />
                             <Route exact path={'/app/message/messageHistory'} component={MessageHistory} />
 
-                            <Route exact path={'/app/alarm/alarmNotifyType'} component={AlarmNotifyType} />
-                            <Route exact path={'/app/alarm/alarmUser'} component={AlarmUser} />
-                            <Route exact path={'/app/alarm/alarmRule'} component={AlarmRule} />
+                            {/*<Route exact path={'/app/alarm/alarmNotifyType'} component={AlarmNotifyType} />*/}
+                            {/*<Route exact path={'/app/alarm/alarmUser'} component={AlarmUser} />*/}
+                            {/*<Route exact path={'/app/alarm/alarmRule'} component={AlarmRule} />*/}
 
                             <Route component={noMatch} />
                         </Switch>
