@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import { Table, Icon, Popconfirm } from 'antd';
 import {notification} from "antd/lib/index";
+import {msgTypeText} from "../../message/common/Message";
+
+const ruleType = {
+    '1' : '关键字',
+    '2' : '正则表达式'
+};
 
 export default class AlarmRuleTable extends Component{
     constructor(props){
@@ -18,7 +24,10 @@ export default class AlarmRuleTable extends Component{
             dataIndex: 'appName'
         }, {
             title: '报警类型',
-            dataIndex: 'ruleType'
+            dataIndex: 'ruleType',
+            render: (text, record) => (
+                ruleType[text]
+            )
         },  {
             title: '报警规则内容',
             dataIndex: 'ruleFragment'

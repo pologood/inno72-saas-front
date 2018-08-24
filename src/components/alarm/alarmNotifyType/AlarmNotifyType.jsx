@@ -60,9 +60,9 @@ class AlarmNotifyTypeInner extends Component {
     /**
      * 失败通知
      */
-    notifyError = () => {
+    notifyError = (text) => {
         notification['error']({
-            message: '操作失败'
+            message: text || '操作失败'
         });
     };
 
@@ -108,7 +108,7 @@ class AlarmNotifyTypeInner extends Component {
                     this.notifySuccess();
                     this.getData();
                 } else {
-                    this.notifyError();
+                    this.notifyError(response.data.msg);
                 }
             })
             .catch(function (error) {
