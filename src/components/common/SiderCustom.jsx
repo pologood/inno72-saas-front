@@ -71,7 +71,7 @@ export default class SiderCustom extends Component{
                     {/*</Menu.Item>*/}
 
                     <SubMenu
-                        key="/app/chart"
+                        key="/app/message"
                         title={<span><span>消息管理</span></span>}
                     >
                         <Menu.Item key="/app/message/messageTemplate">
@@ -81,6 +81,32 @@ export default class SiderCustom extends Component{
                         <Menu.Item key="/app/message/messageHistory">
                             <Link to={'/app/message/messageHistory'}><span>历史消息</span></Link>
                         </Menu.Item>
+                    </SubMenu>
+
+                    <SubMenu
+                        key="/app/alarm"
+                        title={<span><span>报警管理</span></span>}
+                    >
+
+                        <Menu.Item key="/app/alarm/alarmNotifyType">
+                            <Link to={'/app/alarm/alarmNotifyType'}><span>通知方式</span></Link>
+                        </Menu.Item>
+
+                        <Menu.Item key="/app/alarm/alarmUser">
+                            <Link to={'/app/alarm/alarmUser'}><span>报警用户</span></Link>
+                        </Menu.Item>
+
+                        <Menu.Item key="/app/alarm/alarmRule">
+                            <Link to={'/app/alarm/alarmRule'}><span>报警规则</span></Link>
+                        </Menu.Item>
+
+                        <Menu.Item key="/app/alarm/alarmLog">
+                            <Link to={'/app/alarm/alarmLog'}><span>报警日志</span></Link>
+                        </Menu.Item>
+
+                        {/*<Menu.Item key="/app/message/messageHistory">*/}
+                            {/*<Link to={'/app/message/messageHistory'}><span>历史消息</span></Link>*/}
+                        {/*</Menu.Item>*/}
                     </SubMenu>
 
                     {/*<Menu.Item key="/app/richText">*/}

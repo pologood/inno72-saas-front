@@ -171,11 +171,13 @@ class AlarmRuleInner extends Component {
                         'alarmRule.id': dataobj.alarmRule.id,
                         'alarmRule.name': dataobj.alarmRule.name,
                         'alarmRule.appName': dataobj.alarmRule.appName,
-                        'alarmRule.ruleType': dataobj.alarmRule.ruleType,
+                        'alarmRule.ruleType': dataobj.alarmRule.ruleType ? dataobj.alarmRule.ruleType + '' : '',
                         'alarmRule.ruleFragment': dataobj.alarmRule.ruleFragment,
                         'alarmRule.startTime': moment(dataobj.alarmRule.startTime, 'HH:mm:ss'),
                         'alarmRule.endTime': moment(dataobj.alarmRule.endTime, 'HH:mm:ss'),
-                        'alarmRule.director': dataobj.alarmRule.director
+                        'alarmRule.director': dataobj.alarmRule.director,
+                        'alarmRule.userId': dataobj.alarmRule.userId,
+                        'alarmRule.typeId': dataobj.alarmRule.typeId,
                     });
 
                     this.setState({

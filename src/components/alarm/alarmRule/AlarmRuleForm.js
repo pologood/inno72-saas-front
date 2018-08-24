@@ -8,6 +8,8 @@ import {urls} from "../../common/Urls";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
+const RadioGroup = Radio.Group;
+const RadioButton = Radio.Button;
 
 const ALARM_NOTIFY_TYPE_URL = urls('ALARM_URL') + '/alarm/msg/type';
 const ALARM_USER_URL = urls('ALARM_URL') + '/alarm/user';
@@ -27,6 +29,10 @@ class AlarmRuleForm extends Component {
         console.log('componentDidMount');
         this.initUser();
         this.initNotifyType();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const {form} = nextProps;
     }
 
     initUser = () => {
@@ -69,10 +75,6 @@ class AlarmRuleForm extends Component {
         });
     };
 
-    componentWillReceiveProps(nextProps) {
-        const {form} = nextProps;
-    }
-
     render() {
         const {visible, onCancel, onCreate, form, okText, title} = this.props;
         const {getFieldDecorator} = form;
@@ -109,10 +111,10 @@ class AlarmRuleForm extends Component {
                         {getFieldDecorator('alarmRule.ruleType', {
                             initialValue: '1'
                         })(
-                            <Select placeholder="请选择">
-                                <Option value="1">关键字</Option>
-                                <Option value="2">正则表达式</Option>
-                            </Select>
+                            <RadioGroup onChange={this.handleMessageTypeClick}>
+                                <RadioButton key="1" value="1">关键字</RadioButton>
+                                <RadioButton key="2" value="2">正则表达式</RadioButton>
+                            </RadioGroup>
                         )}
                     </FormItem>
                     <FormItem label="报警内容" {...FormItemLayout} hasFeedback>
