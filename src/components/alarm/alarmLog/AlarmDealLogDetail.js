@@ -6,8 +6,10 @@ import './AlarmLog.less';
 import AlarmDetailLogTable from './AlarmDetailLogTable'
 
 import {urls} from "../../common/Urls";
+import {notifySuccess, notifyError} from '../../common/Common';
 import axios from "axios/index";
 
+const ALARM_DEAL_LOG_URL = urls('ALARM_URL') + '/alarm/deal/log';
 const ALARM_DETAIL_LOG_URL = urls('ALARM_URL') + '/alarm/detail/log';
 
 const FormItem = Form.Item;
@@ -21,6 +23,9 @@ class AlarmDealLogDetail extends Component {
         arrInput: {},
         dataSource: [],
         loading: true,
+        dealLogId : '',
+        dealUser : '',
+        dealMethod : ''
     };
 
     //渲染
@@ -31,6 +36,9 @@ class AlarmDealLogDetail extends Component {
     componentWillReceiveProps(nextProps) {
         const {alarmDealLog} = nextProps;
         if (alarmDealLog) {
+            this.setState({
+                dealLogId : alarmDealLog.id
+            });
             this.getData(alarmDealLog.id);
         }
     }
@@ -39,18 +47,62 @@ class AlarmDealLogDetail extends Component {
         super(props);
     }
 
-    getData = (id) => {
-        axios.get(ALARM_DETAIL_LOG_URL + '/getList?logId='+ id)
-        .then(function (response) {
-            console.log(response.data);
-            this.setState({
-                dataSource: response.data,
-                loading: false
-            })
-        }.bind(this))
-        .catch(function (error) {
-            console.log(error);
+    handleOnClick = () => {
+        if (this.state.dealUser.trim() == '') {
+            notifyError('请填写解决人');
+            return;
+        }
+        if (this.state.dealMethod.trim() == '') {
+            notifyError('请填写解决方法');
+            return;
+        }
+
+        axios.post(ALARM_DEAL_LOG_URL + '/save', {
+            id: this.state.dealLogId,
+            dealUser : this.state.dealUser,
+            dealMethod : this.state.dealMethod,
+            status : '1'
         })
+        .then((response) => {
+            if (response.data.code == 0) {
+                notifySuccess();
+                this.props.handleAndRefresh();
+            } else {
+                notifyError();
+            }
+        })
+        .catch(function (error) {
+            notifyError();
+        });
+    };
+
+    onChange = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        if (name == 'dealUser') {
+            this.setState({
+                dealUser : value
+            })
+        }
+        if (name == 'dealMethod') {
+            this.setState({
+                dealMethod : value
+            })
+        }
+    };
+
+    getData = (id) => {
+        axios.get(ALARM_DETAIL_LOG_URL + '/getList?logId=' + id)
+            .then(function (response) {
+                console.log(response.data);
+                this.setState({
+                    dataSource: response.data,
+                    loading: false
+                })
+            }.bind(this))
+            .catch(function (error) {
+                console.log(error);
+            })
     };
 
     render() {
@@ -84,21 +136,37 @@ class AlarmDealLogDetail extends Component {
                         <Col span={4}>第一次查看时间</Col>
                         <Col span={20}>{alarmDealLog.firstReadTime}</Col>
                     </Row>
-                    <Row>
-                        <Col span={4}>解决时间</Col>
-                        <Col span={20}>{alarmDealLog.dealTime}</Col>
-                    </Row>
-                    <Row>
-                        <Col span={4}>解决人</Col>
-                        <Col span={20}>{alarmDealLog.dealUser}</Col>
-                    </Row>
+
                     <Row>
                         <Col span={4}>状态</Col>
                         <Col span={20}>{alarmDealLog.status == 1 ? '已处理' : '未处理'}</Col>
                     </Row>
-                    <Row>
+
+                    {alarmDealLog.status == 1
+                        ?  <Row>
+                            <Col span={4}>解决时间</Col>
+                            <Col span={20}>{alarmDealLog.dealTime}</Col>
+                        </Row>
+                        :  null
+                    }
+
+                    <Row style={{marginTop: '10px'}}>
+                        <Col span={4}>解决人</Col>
+                        <Col span={20}>
+                            {alarmDealLog.status == 1
+                                ?  alarmDealLog.dealUser
+                                :  <Col span={20}><Input name="dealUser" value={this.state.dealUser} onChange={this.onChange} style={{width: '100px'}}/> </Col>
+                            }
+                        </Col>
+                    </Row>
+
+                    <Row style={{marginTop: '10px'}}>
                         <Col span={4}>解决方式</Col>
-                        <Col span={20}>{alarmDealLog.appName}</Col>
+                        {alarmDealLog.status == 1
+                            ?  alarmDealLog.dealMethod
+                            :  <Col span={20}><Input name="dealMethod" onChange={this.onChange} value={this.state.dealMethod}/>
+                                <Button onClick={this.handleOnClick} type="primary" style={{float: 'right',marginBottom: '10px',marginTop: '10px'}}>提交</Button></Col>
+                        }
                     </Row>
 
                     <AlarmDetailLogTable
@@ -106,8 +174,6 @@ class AlarmDealLogDetail extends Component {
                         detailClick={this.detailClick}
                         loading={loading}
                     />
-
-
                 </div>
             </Modal>
         );

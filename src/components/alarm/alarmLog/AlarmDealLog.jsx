@@ -129,6 +129,12 @@ class AlarmDealLogInner extends Component {
         this.setState({visible: false});
     };
 
+    //取消并且刷新
+    handleAndRefresh = () => {
+        this.setState({visible: false});
+        this.getData();
+    };
+
     //单个删除
     onDelete = (record) => {
         console.log(record.id);
@@ -146,7 +152,7 @@ class AlarmDealLogInner extends Component {
             });
     };
 
-    //点击修改
+    //点击查看详情
     detailClick = (record) => {
         axios.get(ALARM_DEAL_LOG_URL + "/detail?id=" + record.logId)
             .then((response) => {
@@ -229,7 +235,7 @@ class AlarmDealLogInner extends Component {
                         pageChange={this.pageChange}
                     />
 
-                    <AlarmDealLogDetail visible={visible} alarmDealLog={alarmDealLog} onCancel={this.handleCancel}
+                    <AlarmDealLogDetail visible={visible} alarmDealLog={alarmDealLog} handleAndRefresh={this.handleAndRefresh} onCancel={this.handleCancel}
                                           title="详情"
                     />
                 </div>
