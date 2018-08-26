@@ -9,9 +9,9 @@ const MESSAGE_URL = {
 
 const ALARM_URL = {
     'development': 'http://127.0.0.1:8085',
-    'test': 'http://127.0.0.1:8083',
-    'stage': 'http://api.msg.32solo.com',
-    'production': 'http://pre_test.72solo.com:30516'
+    'test': 'http://api.alarm-service.36solo.com',
+    'stage': 'http://api.alarm-service.32solo.com',
+    'production': 'http://api.alarm-service.inno72.com'
 };
 
 const URLS = {
