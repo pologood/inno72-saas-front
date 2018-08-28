@@ -25,7 +25,9 @@ class AlarmDealLogDetail extends Component {
         loading: true,
         dealLogId : '',
         dealUser : '',
-        dealMethod : ''
+        dealMethod : '',
+        page : 1,
+        size : 10
     };
 
     //渲染
@@ -91,18 +93,34 @@ class AlarmDealLogDetail extends Component {
         }
     };
 
+    //分页
+    pageChange = (current, pageSize) => {
+        this.setState({
+            page: current,
+            size: pageSize,
+        }, () => {
+            this.getData();
+        });
+    };
+
     getData = (id) => {
-        axios.get(ALARM_DETAIL_LOG_URL + '/getList?logId=' + id)
-            .then(function (response) {
-                console.log(response.data);
-                this.setState({
-                    dataSource: response.data,
-                    loading: false
-                })
-            }.bind(this))
-            .catch(function (error) {
-                console.log(error);
+        axios.get(ALARM_DETAIL_LOG_URL + '/list', {
+            params: {
+                page: this.state.page,
+                size: this.state.size,
+                logId: id
+            }
+        })
+        .then(function (response) {
+            console.log(response.data);
+            this.setState({
+                dataSource: response.data.data,
+                loading: false
             })
+        }.bind(this))
+        .catch(function (error) {
+            console.log(error);
+        })
     };
 
     render() {
@@ -173,6 +191,7 @@ class AlarmDealLogDetail extends Component {
                         dataSource={dataSource}
                         detailClick={this.detailClick}
                         loading={loading}
+                        pageChange={this.pageChange}
                     />
                 </div>
             </Modal>

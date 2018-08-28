@@ -26,7 +26,7 @@ class AlarmDealLogInner extends Component {
             tableRowKey: 0,
             isUpdate: false,
             loading: true,
-            page: 0,
+            page: 1,
             size: 10,
             key:'',
             alarmDealLog : {},
