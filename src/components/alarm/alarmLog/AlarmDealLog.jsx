@@ -26,22 +26,26 @@ class AlarmDealLogInner extends Component {
             tableRowKey: 0,
             isUpdate: false,
             loading: true,
-            pageNo: 0,
-            pageSize: 10,
+            page: 0,
+            size: 10,
             key:'',
-            alarmDealLog : {}
+            alarmDealLog : {},
+            dealLogId : ''
         };
     }
 
     getData = () => {
-        axios.get(ALARM_DEAL_LOG_URL + '/getList', {
+        axios.get(ALARM_DEAL_LOG_URL + '/list', {
             params: {
+                page: this.state.page,
+                size: this.state.size,
+                dealLogId: this.state.dealLogId
             }
         })
         .then(function (response) {
             console.log(response.data);
             this.setState({
-                dataSource: response.data,
+                dataSource: response.data.data,
                 loading: false
             })
         }.bind(this))
@@ -124,6 +128,21 @@ class AlarmDealLogInner extends Component {
         });
     };
 
+    //搜索按钮
+    handleSearch = e => {
+        e.preventDefault();
+        const { form } = this.props;
+        form.validateFields((err, fieldsValue) => {
+            if (err) return;
+            this.setState({
+                page: 1,
+                dealLogId: fieldsValue.dealLogId ? fieldsValue.dealLogId : '',
+            }, () => {
+                this.getData();
+            });
+        });
+    };
+
     //取消
     handleCancel = () => {
         this.setState({visible: false});
@@ -154,7 +173,7 @@ class AlarmDealLogInner extends Component {
 
     //点击查看详情
     detailClick = (record) => {
-        axios.get(ALARM_DEAL_LOG_URL + "/detail?id=" + record.logId)
+        axios.get(ALARM_DEAL_LOG_URL + "/detail?id=" + record.id)
             .then((response) => {
                 if (response.data.code == 0) {
                     console.log(response);
@@ -211,8 +230,8 @@ class AlarmDealLogInner extends Component {
     //分页
     pageChange = (current, pageSize) => {
         this.setState({
-            pageNo: current - 1,
-            pageSize: pageSize,
+            page: current,
+            size: pageSize,
         }, () => {
             this.getData();
         });
@@ -226,6 +245,26 @@ class AlarmDealLogInner extends Component {
             <div>
                 <BreadcrumbCustom paths={['报警管理', '报警日志']}/>
                 <div className='formBody'>
+
+
+                    <Form onSubmit={this.handleSearch}>
+                        <Row gutter={16}>
+
+                            <Col className="gutter-row" sm={5}>
+                                <FormItem>
+                                    {getFieldDecorator('dealLogId')(<Input placeholder="日志ID" />)}
+                                </FormItem>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={16}>
+                            <div className='btnOpera'>
+                                <Button type="primary" htmlType="submit"
+                                        style={{marginRight: '10px'}}>查询</Button>
+                            </div>
+                        </Row>
+                    </Form>
+
                     <AlarmDealLogTable
                         dataSource={dataSource}
                         checkChange={this.checkChange}

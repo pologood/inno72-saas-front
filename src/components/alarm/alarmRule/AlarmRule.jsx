@@ -26,8 +26,8 @@ class AlarmRuleInner extends Component {
             tableRowKey: 0,
             isUpdate: false,
             loading: true,
-            pageNo: 0,
-            pageSize: 10,
+            page: 0,
+            size: 10,
             key: '',
             messageType: '',
             messageChildTypeArr: [],
@@ -36,13 +36,16 @@ class AlarmRuleInner extends Component {
     }
 
     getData = () => {
-        axios.get(ALARM_RULE_URL + '/getList', {
-            params: {}
+        axios.get(ALARM_RULE_URL + '/list', {
+            params: {
+                page: this.state.page,
+                size: this.state.size
+            }
         })
             .then(function (response) {
                 console.log(response.data);
                 this.setState({
-                    dataSource: response.data,
+                    dataSource: response.data.data,
                     loading: false
                 })
             }.bind(this))
@@ -132,6 +135,21 @@ class AlarmRuleInner extends Component {
         this.setState({visible: false});
     };
 
+    //搜索按钮
+    handleSearch = e => {
+        e.preventDefault();
+        const { form } = this.props;
+        form.validateFields((err, fieldsValue) => {
+            if (err) return;
+            this.setState({
+                page: 0,
+                key: fieldsValue.key ? fieldsValue.key : '',
+            }, () => {
+                this.getData();
+            });
+        });
+    };
+
     //单个删除
     onDelete = (record) => {
         console.log(record.id);
@@ -204,8 +222,8 @@ class AlarmRuleInner extends Component {
     //分页
     pageChange = (current, pageSize) => {
         this.setState({
-            pageNo: current - 1,
-            pageSize: pageSize,
+            page: current,
+            size: pageSize,
         }, () => {
             this.getData();
         });
@@ -224,11 +242,7 @@ class AlarmRuleInner extends Component {
             <div>
                 <BreadcrumbCustom paths={['报警管理', '报警规则']}/>
                 <div className='formBody'>
-                    <Row gutter={16}>
-                        <div className='plus' onClick={this.CreateItem}>
-                            <Icon type="plus-circle"/>
-                        </div>
-                    </Row>
+
                     <AlarmRuleTable
                         dataSource={dataSource}
                         checkChange={this.checkChange}

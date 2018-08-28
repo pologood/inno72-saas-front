@@ -15,19 +15,19 @@ export default class AlarmDealLogTable extends Component{
             dataIndex: 'appName'
         }, {
             title: '报警规则名',
-            dataIndex: 'ruleName'
+            dataIndex: 'alarmRule.name'
         },{
             title: '报警时间',
             dataIndex: 'dealTime'
         },{
             title: '负责人',
-            dataIndex: 'director'
+            dataIndex: 'alarmRule.director'
         },{
             title: '第一次查看时间',
             dataIndex: 'firstReadTime'
         },{
             title: '解决时间',
-            dataIndex: 'dealLogTime'
+            dataIndex: 'dealTime'
         },{
             title: '状态',
             dataIndex: 'status',
@@ -46,12 +46,26 @@ export default class AlarmDealLogTable extends Component{
         return(
             <Table
                 columns={columns}
-                dataSource={dataSource.data}
+                dataSource={dataSource.list}
                 bordered={true}
                 scroll={{x:'100%'}}
                 className='formTable'
                 loading={loading}
-                rowKey={id => dataSource.data.id}
+                rowKey={id => dataSource.list.id}
+                pagination={{  //分页
+                    total: dataSource.total, //数据总数量
+                    pageSize: dataSource.pageSize,  //显示几条一页
+                    // showSizeChanger: true,  //是否显示可以设置几条一页的选项
+                    showTotal: function () {  //设置显示一共几条数据、
+                        return '共 ' + dataSource.total + ' 条数据';
+                    },
+                    onShowSizeChange(current, pageSize) {  //当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+                        pageChange(current, pageSize)
+                    },
+                    onChange(current) {  //点击改变页数的选项时调用函数，current:将要跳转的页数
+                        pageChange(current)
+                    }
+                }}
             />
         )
     }
