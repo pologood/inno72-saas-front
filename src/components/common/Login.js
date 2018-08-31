@@ -84,7 +84,6 @@ class NormalLoginForm extends Component {
                             <Button type="primary" htmlType="submit" className="login-form-button" style={{width: '100%'}}>
                                 登录
                             </Button>
-                            系统正在完善，临时使用admin/admin
                         </FormItem>
                     </Form>
                 </div>
