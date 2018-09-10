@@ -242,7 +242,11 @@ class AlarmRuleInner extends Component {
             <div>
                 <BreadcrumbCustom paths={['报警管理', '报警规则']}/>
                 <div className='formBody'>
-
+                    <Row gutter={16}>
+                        <div className='plus' onClick={this.CreateItem}>
+                            <Icon type="plus-circle"/>
+                        </div>
+                    </Row>
                     <AlarmRuleTable
                         dataSource={dataSource}
                         checkChange={this.checkChange}
