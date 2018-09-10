@@ -18,7 +18,7 @@ export default class AlarmDealLogTable extends Component{
             dataIndex: 'alarmRule.name'
         },{
             title: '报警时间',
-            dataIndex: 'dealTime'
+            dataIndex: 'createTime'
         },{
             title: '负责人',
             dataIndex: 'alarmRule.director'
