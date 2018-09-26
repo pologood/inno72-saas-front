@@ -105,6 +105,14 @@ export default class SiderCustom extends Component{
                         </Menu.Item>
                     </SubMenu>
 
+                    <SubMenu key="/app/active"
+                             title={<span><span>日志查询</span></span>}>
+
+                        <Menu.Item key="/app/active/activelogQuery">
+                            <Link to={'/app/active/activelogQuery'}><span>日志查询</span></Link>
+                        </Menu.Item>
+                    </SubMenu>
+
                     {/*<Menu.Item key="/app/richText">*/}
                         {/*<Link to={'/app/richText'}><Icon type="edit" /><span>富文本</span></Link>*/}
                     {/*</Menu.Item>*/}

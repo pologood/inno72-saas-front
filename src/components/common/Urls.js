@@ -14,9 +14,17 @@ const ALARM_URL = {
     'production': 'http://api.alarm-service.inno72.com'
 };
 
+const ACTIVE_URL = {
+    'development': 'http://127.0.0.1:8089',
+    'test': "http://api.bi.36solo.com",
+    'stage': "http://api.bi.32solo.com",
+    'production': "http://api.bi.inno72.com",
+};
+
 const URLS = {
     'MESSAGE_URL': MESSAGE_URL,
-    'ALARM_URL' : ALARM_URL
+    'ALARM_URL' : ALARM_URL,
+    ACTIVE_URL,
 };
 
 export function urls(key) {

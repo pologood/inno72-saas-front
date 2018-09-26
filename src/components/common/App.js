@@ -18,6 +18,7 @@ import AlarmNotifyType from "../alarm/alarmNotifyType/AlarmNotifyType";
 import AlarmUser from "../alarm/alarmUser/AlarmUser";
 import AlarmRule from "../alarm/alarmRule/AlarmRule";
 import AlarmDealLog from "../alarm/alarmLog/AlarmDealLog";
+import ActivelogQuery from "../activelog/activelogQuery/ActivelogQuery";
 
 const {Content, Footer} = Layout;
 
@@ -71,7 +72,7 @@ export default class App extends Component {
                             <Route exact path={'/app/alarm/alarmUser'} component={AlarmUser} />
                             <Route exact path={'/app/alarm/alarmRule'} component={AlarmRule} />
                             <Route exact path={'/app/alarm/alarmDealLog'} component={AlarmDealLog} />
-
+                            <Route exact path={'/app/active/activelogQuery'} component={ActivelogQuery} />
                             <Route component={noMatch} />
                         </Switch>
                     </Content>
