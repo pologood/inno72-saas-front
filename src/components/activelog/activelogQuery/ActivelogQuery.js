@@ -4,7 +4,7 @@ import BreadcrumbCustom from "../../common/BreadcrumbCustom";
 import "./Activelog.less"
 import axios from 'axios';
 import {urls} from "../../common/Urls";
-
+import moment from 'moment';
 
 const LOGINFO_URL = urls('ACTIVE_URL') + '/log/LogInfo';
 
@@ -33,8 +33,8 @@ class ActivelogQuery extends PureComponent{
                 instanceName:fieldsValue.instanceName? fieldsValue.instanceName :null,
                 appName:fieldsValue.appName? fieldsValue.appName :null,
                 level:fieldsValue.level? fieldsValue.level :null,
-                startTime: fieldsValue.startTime? fieldsValue.startTime :null,
-                endTime: fieldsValue.endTime? fieldsValue.endTime :null,
+                startTime: fieldsValue.startTime? fieldsValue.startTime.format('YYYY-MM-DD HH:mm:ss') :null,
+                endTime: fieldsValue.endTime? fieldsValue.endTime.format('YYYY-MM-DD HH:mm:ss') :null,
                 detail: fieldsValue.detail? fieldsValue.detail :null,
                 pageNo:0,
                 pageSzie:20,
@@ -78,8 +78,8 @@ class ActivelogQuery extends PureComponent{
                 instanceName:fieldsValue.instanceName? fieldsValue.instanceName :null,
                 appName:fieldsValue.appName? fieldsValue.appName :null,
                 level:fieldsValue.level? fieldsValue.level :null,
-                startTime: fieldsValue.startTime? fieldsValue.startTime :null,
-                endTime: fieldsValue.endTime? fieldsValue.endTime :null,
+                startTime: fieldsValue.startTime? fieldsValue.startTime.format('YYYY-MM-DD HH:mm:ss') :null,
+                endTime: fieldsValue.endTime? fieldsValue.endTime.format('YYYY-MM-DD HH:mm:ss') :null,
                 detail: fieldsValue.detail? fieldsValue.detail :null,
                 pageNo:page - 1,
                 pageSzie:20,
@@ -211,7 +211,7 @@ class ActivelogQuery extends PureComponent{
                                 <Form.Item >
                                     {getFieldDecorator('startTime')(
                                         <DatePicker disabled={this.state.autoSwith}
-                                            showTime
+                                                    showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
                                             format="YYYY-MM-DD HH:mm:ss"
                                             placeholder="开始时间"
                                         />
@@ -222,7 +222,7 @@ class ActivelogQuery extends PureComponent{
                                 <Form.Item>
                                     {getFieldDecorator('endTime')(
                                         <DatePicker disabled={this.state.autoSwith}
-                                            showTime
+                                                    showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
                                             format="YYYY-MM-DD HH:mm:ss"
                                             placeholder="结束时间"
                                         />
