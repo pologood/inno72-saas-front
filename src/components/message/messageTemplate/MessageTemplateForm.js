@@ -309,6 +309,17 @@ class MessageTemplateForm extends Component {
                                 </Select>
                             )}
                         </FormItem>
+                        <FormItem label="应用类型" {...FormItemLayout}>
+                            {getFieldDecorator('appType', {
+                                initialValue: '1'
+                            })(
+                                <Select style={{width: 120}}>
+                                    <Option value="1">机器</Option>
+                                    <Option value="2">巡检</Option>
+                                    <Option value="3">合作机器</Option>
+                                </Select>
+                            )}
+                        </FormItem>
                     </div>
 
                     <FormItem label="群ID" {...FormItemLayout} style={{display: this.state.isShowGroupId}}>

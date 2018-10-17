@@ -207,6 +207,7 @@ class MessageTemplateInner extends Component {
             values.content.transmissionType = '';
             values.content.templateType = '';
             values.content.osType = '';
+            values.appType = '';
         }
 
         if (values.messageType == MSG_TYPE_WECHAT && values.messageChildType == MSG_CHILD_TYPE_TEMPLATE) {
@@ -266,6 +267,7 @@ class MessageTemplateInner extends Component {
                         'content.transmissionType': dataobj.content.transmissionType ? dataobj.content.transmissionType + '' : '1',
                         'content.templateType': dataobj.content.templateType ? dataobj.content.templateType + '' : '1',
                         'content.osType': dataobj.content.osType ? dataobj.content.osType + '' : '1',
+                        apppType: dataobj.appType ? dataobj.appType + '' : '1',
                         robotToken: dataobj.receiver,
                         groupId: dataobj.receiver,
                         'content.template_id': dataobj.content.template_id || '',
