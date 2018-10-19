@@ -19,6 +19,9 @@ import AlarmUser from "../alarm/alarmUser/AlarmUser";
 import AlarmRule from "../alarm/alarmRule/AlarmRule";
 import AlarmDealLog from "../alarm/alarmLog/AlarmDealLog";
 import ActivelogQuery from "../activelog/activelogQuery/ActivelogQuery";
+import crontabListPage from "../crontab/list";
+import taskListPage from "../crontab/task";
+import logListPage from "../crontab/log";
 
 const {Content, Footer} = Layout;
 
@@ -73,6 +76,9 @@ export default class App extends Component {
                             <Route exact path={'/app/alarm/alarmRule'} component={AlarmRule} />
                             <Route exact path={'/app/alarm/alarmDealLog'} component={AlarmDealLog} />
                             <Route exact path={'/app/active/activelogQuery'} component={ActivelogQuery} />
+                            <Route exact path={'/app/crontab/list'} component={crontabListPage} />
+                            <Route exact path={'/app/crontab/task'} component={taskListPage} />
+                            <Route exact path={'/app/crontab/log/:id?'} component={logListPage} />
                             <Route component={noMatch} />
                         </Switch>
                     </Content>

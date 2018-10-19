@@ -21,10 +21,18 @@ const ACTIVE_URL = {
     'production': "http://api.bi.inno72.com",
 };
 
+const CRONTAB_URL = {
+    'development': 'http://172.16.26.180:8892',
+    'test': "http://api.bi.36solo.com",
+    'stage': "http://api.bi.32solo.com",
+    'production': "http://api.bi.inno72.com",
+};
+
 const URLS = {
     'MESSAGE_URL': MESSAGE_URL,
     'ALARM_URL' : ALARM_URL,
     ACTIVE_URL,
+    CRONTAB_URL,
 };
 
 export function urls(key) {

@@ -112,6 +112,17 @@ export default class SiderCustom extends Component{
                             <Link to={'/app/active/activelogQuery'}><span>日志查询</span></Link>
                         </Menu.Item>
                     </SubMenu>
+                    <SubMenu key="/app/crontab" title={<span><span>定时任务</span></span>}>
+                        <Menu.Item key="/app/crontab/list">
+                            <Link to={'/app/crontab/list'}><span>执行组</span></Link>
+                        </Menu.Item>
+                        <Menu.Item key="/app/crontab/task">
+                            <Link to={'/app/crontab/task'}><span>任务</span></Link>
+                        </Menu.Item>
+                        <Menu.Item key="/app/crontab/log">
+                            <Link to={'/app/crontab/log'}><span>日志</span></Link>
+                        </Menu.Item>
+                    </SubMenu>
 
                     {/*<Menu.Item key="/app/richText">*/}
                         {/*<Link to={'/app/richText'}><Icon type="edit" /><span>富文本</span></Link>*/}
