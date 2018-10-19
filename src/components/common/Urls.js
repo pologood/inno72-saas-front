@@ -23,9 +23,9 @@ const ACTIVE_URL = {
 
 const CRONTAB_URL = {
     'development': 'http://172.16.26.180:8892',
-    'test': "http://api.bi.36solo.com",
-    'stage': "http://api.bi.32solo.com",
-    'production': "http://api.bi.inno72.com",
+    'test': "http://admin.schedule.36solo.com",
+    'stage': "http://admin.schedule.32solo.com",
+    'production': "http://admin.schedule.72solo.com",
 };
 
 const URLS = {
