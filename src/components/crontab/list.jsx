@@ -17,6 +17,21 @@ const CRONTAB_REMOVE_URL = urls('CRONTAB_URL') + '/jobgroup/remove';
 
 const CollectionCreateForm = Form.create()(
     class extends React.Component {
+
+        constructor(){
+            super();
+            this.state = {
+                registerMode:0
+            };
+        }
+
+        registerModeOnChange(e){
+            console.log(e);
+            this.setState ({
+                registerMode: e.target.value
+            });
+        }
+
         render() {
         const { visible, onCancel, onCreate, form, title } = this.props;
         const { getFieldDecorator } = form;
@@ -49,7 +64,7 @@ const CollectionCreateForm = Form.create()(
                     rules: [{ required: true, message: '请选择!' }],
                     initialValue: 0,
                 })(
-                    <Radio.Group>
+                    <Radio.Group onChange={this.registerModeOnChange.bind(this)}>
                     <Radio value={0}>自动注册</Radio>
                     <Radio value={1}>手动录入</Radio>
                     </Radio.Group>
@@ -57,9 +72,9 @@ const CollectionCreateForm = Form.create()(
                 </FormItem>
                 <FormItem label="注册地址">
                 {getFieldDecorator('addressList', {
-                    rules: [{ required: true, message: '请输入!' }],
+                    rules: [{required: this.state.registerMode === 1 ,message: '请输入!' }],
                 })(
-                    <Input placeholder="例：127.0.0.1,192.168.0.1"/>
+                    <Input disabled={this.state.registerMode === 0} placeholder="例：127.0.0.1,192.168.0.1"/>
                 )}
                 </FormItem>
             </Form>
