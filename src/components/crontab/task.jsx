@@ -119,7 +119,6 @@ const CollectionCreateForm = Form.create()(
               {getFieldDecorator("executorParam", {
                 rules: [
                   {
-                    required: true,
                     message: "请选择"
                   }
                 ]
@@ -175,7 +174,6 @@ const CollectionCreateForm = Form.create()(
               {getFieldDecorator("executorHandler", {
                 rules: [
                   {
-                    required: true,
                     message: "请选择"
                   }
                 ]
@@ -215,7 +213,6 @@ const CollectionCreateForm = Form.create()(
                     getValueFromEvent: this.normFile,
                     rules: [
                       {
-                        required: true,
                         message: "请选择jar包"
                       }
                     ]
@@ -225,7 +222,6 @@ const CollectionCreateForm = Form.create()(
                   {getFieldDecorator("checksum", {
                     rules: [
                       {
-                        required: true,
                         message: "请填写"
                       }
                     ]
