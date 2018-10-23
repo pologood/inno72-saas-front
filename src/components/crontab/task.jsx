@@ -491,10 +491,7 @@ class taskList extends Component {
     const form = this.formRef.props.form;
     form.validateFields((err, values) => {
       if (modalType === "edit") {
-        delete err["file"];
-        delete err["checksum"];
-        delete values["file"];
-        delete values["checksum"];
+
         console.log("err当前值：", JSON.stringify(err));
         console.log("err当前值：", JSON.stringify(err) === "{}");
         if (JSON.stringify(err) === "{}") {
