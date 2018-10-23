@@ -32,6 +32,7 @@ const TASK_UPDATE_URL = urls("CRONTAB_URL") + "/jobinfo/update";
 const TASK_REMOVE_URL = urls("CRONTAB_URL") + "	/jobinfo/remove";
 const TASK_EXECUTE_URL = urls("CRONTAB_URL") + "/jobinfo/trigger";
 const TASK_PAUSE_URL = urls("CRONTAB_URL") + "/jobinfo/pause";
+const TASK_RESUME_URL = urls("CRONTAB_URL") + "/jobinfo/resume";
 const TASK_UPDATE_JAR_URL = urls("CRONTAB_URL") + "/jobinfo/updateJarSource";
 const CRONTAB_LIST_URL = urls("CRONTAB_URL") + "/jobgroup";
 
@@ -627,6 +628,28 @@ class taskList extends Component {
     });
   };
 
+
+  handleResume = row => {
+        const data = new URLSearchParams();
+        data.append("id", row.id);
+        axios({
+            method: "post",
+            url: TASK_RESUME_URL,
+            headers: {
+                "Content-type": "application/x-www-form-urlencoded"
+            },
+            data
+        }).then(res => {
+            const { code, data, msg } = res.data;
+            if (code !== 0) {
+                message.error(msg);
+            } else {
+                message.success("暂停成功");
+            }
+            this.getList();
+        });
+    };
+
   // 新建modal ref
   saveFormRef = formRef => {
     console.log("formRef", formRef);
@@ -765,6 +788,18 @@ class taskList extends Component {
               icon={<Icon type="question-circle-o" />}
             >
               <a href="javascript:;">暂停</a>
+            </Popconfirm>
+            <Divider type="vertical" />
+            <Popconfirm
+                title="确定要恢复吗？"
+                cancelText="取消"
+                okText="确定"
+                onConfirm={() => {
+                    this.handleResume(record);
+                }}
+                icon={<Icon type="question-circle-o" />}
+            >
+              <a href="javascript:;">恢复</a>
             </Popconfirm>
             <Divider type="vertical" />
             <a
