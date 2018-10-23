@@ -517,7 +517,11 @@ class taskList extends Component {
       }
 
       for (let item in values) {
-        formData.append(item, values[item]);
+        if(values[item] === undefined){
+            formData.append(item, null);
+        }else {
+            formData.append(item, values[item]);
+        }
       }
 
       axios({
