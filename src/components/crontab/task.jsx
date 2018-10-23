@@ -514,9 +514,7 @@ class taskList extends Component {
       }
 
       for (let item in values) {
-        if(values[item] === undefined){
-            formData.append(item, null);
-        }else {
+        if(values[item] !== undefined){
             formData.append(item, values[item]);
         }
       }
