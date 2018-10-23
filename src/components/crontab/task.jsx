@@ -644,7 +644,7 @@ class taskList extends Component {
             if (code !== 0) {
                 message.error(msg);
             } else {
-                message.success("暂停成功");
+                message.success("恢复成功");
             }
             this.getList();
         });
