@@ -25,7 +25,7 @@ const CRONTAB_URL = {
     'development': 'http://172.16.26.180:25080',
     'test': "http://admin.schedule.36solo.com",
     'stage': "http://admin.schedule.32solo.com",
-    'production': "http://admin.schedule.72solo.com",
+    'production': "http://admin.schedule.inno72.com",
 };
 
 const URLS = {
