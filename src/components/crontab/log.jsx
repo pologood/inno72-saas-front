@@ -369,19 +369,6 @@ class crontabList extends Component {
             handleSearch={this.handleSearch}
             groupList={groupList}
           />
-          <Row className="header">
-            <Col span={12} />
-            <Col className="right" span={12}>
-              <Button
-                onClick={() => {
-                  this.createModal("");
-                }}
-                type="primary"
-              >
-                新建
-              </Button>
-            </Col>
-          </Row>
           <Table
             rowKey="id"
             columns={columns}
@@ -390,7 +377,7 @@ class crontabList extends Component {
             onChange={this.handlePageChange}
           />
           <Modal
-            title="时时日志"
+            title="实时日志"
             cancelText="刷新"
             maskClosable={false}
             destroyOnClose={true}
