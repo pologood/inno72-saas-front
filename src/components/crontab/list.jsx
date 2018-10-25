@@ -185,7 +185,7 @@ class crontabList extends Component {
         data.append('appName', params.appName);
         data.append('title', params.title);
         data.append('addressType', params.addressType);
-        data.append('addressList', params.addressList);
+        data.append('addressList', params.addressList === undefined ? null : params.addressList);
         if(modalType === 'edit'){
             data.append('id', detail.id);
         }

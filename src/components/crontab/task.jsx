@@ -28,6 +28,7 @@ const Option = Select.Option;
 const TASK_LIST_URL = urls("CRONTAB_URL") + "/jobinfo/pageList";
 const TASK_ENUM_INFO_URL = urls("CRONTAB_URL") + "/jobinfo/enumInfo";
 const TASK_ADD_JAR_URL = urls("CRONTAB_URL") + "/jobinfo/addjar";
+const TASK_ADD_SCRIPT_URL = urls("CRONTAB_URL") + "/jobinfo/addscript";
 const TASK_UPDATE_URL = urls("CRONTAB_URL") + "/jobinfo/update";
 const TASK_REMOVE_URL = urls("CRONTAB_URL") + "	/jobinfo/remove";
 const TASK_EXECUTE_URL = urls("CRONTAB_URL") + "/jobinfo/trigger";
@@ -520,9 +521,12 @@ class taskList extends Component {
         }
       }
 
+        let taskAddUrl = TASK_ADD_SCRIPT_URL;
+        if(values.glueType === 'JAVA_JAR_INTERNAL' || values.glueType === 'JAVA_JAR_EXTERNAL')
+            taskAddUrl = TASK_ADD_JAR_URL;
       axios({
         method: "post",
-        url: modalType === "edit" ? TASK_UPDATE_URL : TASK_ADD_JAR_URL,
+        url: modalType === "edit" ? TASK_UPDATE_URL : taskAddUrl,
         headers: {
           "Content-type": "multipart/form-data"
         },
