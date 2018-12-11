@@ -28,7 +28,7 @@ childTypeTextMap.set('2-2', '链接');
 childTypeTextMap.set('3-1', '云片');
 childTypeTextMap.set('3-2', '筑望');
 childTypeTextMap.set('3-3', '联江');
-childTypeTextMap.set('3-4', '智能短信');
+childTypeTextMap.set('3-9', '智能短信');
 childTypeTextMap.set('4-1', '文本');
 childTypeTextMap.set('5-1', '文本');
 childTypeTextMap.set('6-1', '文本');
