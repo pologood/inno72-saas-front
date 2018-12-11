@@ -135,7 +135,9 @@ class MessageTemplateForm extends Component {
         if (messageType == MSG_TYPE_MSG) {
             this.setState({
                 messageChildTypeArr: [
-                    {'name': '云片', 'val': '1'}
+                    {'name': '云片', 'val': '1'},
+                    {'name': '联江', 'val': '3'},
+                    {'name': '智能短信', 'val': '9'}
                 ]
             });
         }
